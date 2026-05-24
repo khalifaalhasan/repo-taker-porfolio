@@ -26,7 +26,7 @@ export interface ProfileData {
 const GITHUB_PAT = process.env.GITHUB_PAT;
 const GITHUB_ORGS = process.env.GITHUB_ORGS; // Contoh: "nama-org-1,nama-org-2"
 
-export async function fetchGithubProjects(): Promise<Project[]> {
+export async function fetchGithubProjects(username?: string): Promise<Project[]> {
   if (!GITHUB_PAT) {
     console.warn("GITHUB_PAT is not defined in .env. Using fallback dummy data.");
     return (await import("@/data/projects")).projectsData;
@@ -41,8 +41,12 @@ export async function fetchGithubProjects(): Promise<Project[]> {
       next: { revalidate: 3600 },
     };
 
-    // 1. Ambil repo personal yang murni dimiliki oleh user (type=owner), bukan dari semua org yang diikutinya
-    const userReposPromise = fetch("https://api.github.com/user/repos?type=owner&per_page=100&sort=pushed", fetchOptions);
+    // 1. Ambil repo personal yang murni dimiliki oleh user (type=owner)
+    const userReposUrl = username 
+      ? `https://api.github.com/users/${username}/repos?type=owner&per_page=100&sort=pushed`
+      : `https://api.github.com/user/repos?type=owner&per_page=100&sort=pushed`;
+    
+    const userReposPromise = fetch(userReposUrl, fetchOptions);
 
     // 2. Jika ada variabel GITHUB_ORGS, ambil repo spesifik dari organisasi tersebut
     const orgs = GITHUB_ORGS ? GITHUB_ORGS.split(',').map(o => o.trim()).filter(Boolean) : [];
@@ -75,7 +79,19 @@ export async function fetchGithubProjects(): Promise<Project[]> {
     // 3. Ambil daftar repo yang di-pin via GraphQL
     let pinnedRepoNames = new Set<string>();
     try {
-      const graphqlQuery = `
+      const graphqlQuery = username ? `
+        query {
+          user(login: "${username}") {
+            pinnedItems(first: 6, types: REPOSITORY) {
+              nodes {
+                ... on Repository {
+                  name
+                }
+              }
+            }
+          }
+        }
+      ` : `
         query {
           viewer {
             pinnedItems(first: 6, types: REPOSITORY) {
@@ -95,7 +111,9 @@ export async function fetchGithubProjects(): Promise<Project[]> {
         next: { revalidate: 3600 },
       });
       const graphqlData = await graphqlRes.json();
-      const pinnedNodes = graphqlData?.data?.viewer?.pinnedItems?.nodes || [];
+      const pinnedNodes = username 
+        ? graphqlData?.data?.user?.pinnedItems?.nodes || []
+        : graphqlData?.data?.viewer?.pinnedItems?.nodes || [];
       pinnedNodes.forEach((node: any) => pinnedRepoNames.add(node.name));
 
       // Jika ada orgs, ambil juga pinned repos dari tiap org
@@ -240,7 +258,7 @@ export async function fetchGithubProject(slug: string): Promise<Project | undefi
   return enrichedProject;
 }
 
-export async function fetchProfileData(): Promise<ProfileData | null> {
+export async function fetchProfileData(username: string = "khalifaalhasan"): Promise<ProfileData | null> {
   try {
     const fetchOptions = {
       headers: {
@@ -250,9 +268,9 @@ export async function fetchProfileData(): Promise<ProfileData | null> {
     };
 
     // 1. Fetch README
-    const readmeRes = await fetch("https://raw.githubusercontent.com/khalifaalhasan/khalifaalhasan/main/README.md", fetchOptions);
-    let headline = "Product Engineer";
-    let bio = "I don't just build features \u2014 I own outcomes.";
+    const readmeRes = await fetch(`https://raw.githubusercontent.com/${username}/${username}/main/README.md`, fetchOptions);
+    let headline = "Software Engineer";
+    let bio = "Building the future of the web.";
     
     if (readmeRes.ok) {
       const text = await readmeRes.text();
@@ -269,7 +287,7 @@ export async function fetchProfileData(): Promise<ProfileData | null> {
     }
 
     // 2. Fetch User Meta
-    const userRes = await fetch("https://api.github.com/users/khalifaalhasan", fetchOptions);
+    const userRes = await fetch(`https://api.github.com/users/${username}`, fetchOptions);
     const userData = userRes.ok ? await userRes.json() : {};
 
     // 3. Fetch Contributions via GraphQL
@@ -278,7 +296,7 @@ export async function fetchProfileData(): Promise<ProfileData | null> {
     if (GITHUB_PAT) {
       const graphqlQuery = `
         query {
-          user(login: "khalifaalhasan") {
+          user(login: "${username}") {
             contributionsCollection {
               contributionCalendar {
                 totalContributions
@@ -315,7 +333,7 @@ export async function fetchProfileData(): Promise<ProfileData | null> {
       socials: {
         twitter: userData.twitter_username ? `https://twitter.com/${userData.twitter_username}` : null,
         website: userData.blog && userData.blog.trim() !== "" ? (userData.blog.startsWith('http') ? userData.blog : `https://${userData.blog}`) : null,
-        github: userData.html_url || "https://github.com/khalifaalhasan"
+        github: userData.html_url || `https://github.com/${username}`
       },
       totalContributions,
       contributionWeeks

@@ -6,11 +6,27 @@ import { SkillsSection } from "@/components/web/shared/SkillsSection";
 import { AboutSection } from "@/components/web/shared/AboutSection";
 import { Footer } from "@/components/web/shared/Footer";
 import { fetchGithubProjects, fetchProfileData } from "@/lib/github";
+import { Metadata } from "next";
 
-export default async function Home() {
-  const allProjects = await fetchGithubProjects();
+export async function generateMetadata({ params }: { params: { domain: string } }): Promise<Metadata> {
+  const username = params.domain;
+  const profileData = await fetchProfileData(username);
+  
+  if (!profileData) {
+    return { title: `${username} | Porto.social` };
+  }
+
+  return {
+    title: `${username} | ${profileData.headline}`,
+    description: profileData.bio || `Portfolio of ${username}`,
+  };
+}
+
+export default async function Home({ params }: { params: { domain: string } }) {
+  const username = params.domain;
+  const allProjects = await fetchGithubProjects(username);
   const projects = allProjects.filter(p => !p.isHidden);
-  const profileData = await fetchProfileData();
+  const profileData = await fetchProfileData(username);
 
   return (
     <>
