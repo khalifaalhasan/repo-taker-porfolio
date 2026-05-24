@@ -20,11 +20,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Khalifa Alhasan | Product Engineer",
     description: "Portfolio and CV of Khalifa Alhasan, Product Engineer, Backend Engineer, and DevOps SRE.",
-    icons: profileData?.avatarUrl ? {
-      icon: profileData.avatarUrl,
-      apple: profileData.avatarUrl,
-      shortcut: profileData.avatarUrl,
-    } : undefined,
   };
 }
 
