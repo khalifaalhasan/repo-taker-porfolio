@@ -157,7 +157,7 @@ export async function fetchGithubProjects(): Promise<Project[]> {
       
       let defaultImage = `https://picsum.photos/seed/${repo.id}/800/450`;
       if (liveUrl) {
-        defaultImage = `https://api.microlink.io/?url=${encodeURIComponent(liveUrl)}&screenshot=true&meta=false&embed=screenshot.url`;
+        defaultImage = `https://api.microlink.io/?url=${encodeURIComponent(liveUrl)}&screenshot=true&meta=false&embed=screenshot.url&waitFor=3000`;
       }
 
       const images = meta?.images && meta.images.length > 0 ? meta.images : [defaultImage];

@@ -40,7 +40,7 @@ export function FeaturedProjects({ projects }: { projects: Project[] }) {
               
               <div className="relative z-0 pointer-events-none flex flex-col h-full">
                 {project.images && project.images.length > 0 && (
-                  <div className="relative w-full h-32 md:h-48 shrink-0 border-b border-border/50 bg-secondary/30">
+                  <div className="relative w-full aspect-video shrink-0 border-b border-border/50 bg-secondary/30">
                     <Image 
                       src={project.images[0]} 
                       alt={project.title} 

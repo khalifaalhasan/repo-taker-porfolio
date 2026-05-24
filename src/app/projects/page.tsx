@@ -33,7 +33,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
             <Link key={project.id} href={`/projects/${project.slug}`} className="group flex flex-col justify-between rounded-xl md:rounded-2xl bg-card border border-border transition-all hover:-translate-y-1 hover:shadow-lg hover:border-accent/50 overflow-hidden">
               <div className="flex flex-col h-full">
                 {project.images && project.images.length > 0 && (
-                  <div className="relative w-full h-40 md:h-56 shrink-0 border-b border-border/50 bg-secondary/30">
+                  <div className="relative w-full aspect-video shrink-0 border-b border-border/50 bg-secondary/30">
                     <Image 
                       src={project.images[0]} 
                       alt={project.title} 
