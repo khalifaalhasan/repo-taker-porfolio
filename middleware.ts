@@ -24,6 +24,17 @@ export async function middleware(req: NextRequest) {
   const cleanHostname = hostname.split(':')[0]; 
   console.log(`[Middleware] Hostname: ${hostname}, Clean: ${cleanHostname}, Path: ${path}`);
 
+  // Logika 1: Landing Page / Main Application
+  // Jika ini adalah domain utama (termasuk akses via localhost/IP tanpa subdomain)
+  if (
+    cleanHostname === 'localhost' ||
+    cleanHostname === 'porto.social' ||
+    cleanHostname === 'www.porto.social' ||
+    !cleanHostname.includes('.') || // e.g. 'localhost' or '127.0.0.1' or bare IP
+    /^\d+\.\d+\.\d+\.\d+$/.test(cleanHostname) // e.g. '192.168.1.17'
+  ) {
+    return NextResponse.next();
+  }
 
   // Logika 2: Subdomain (e.g. khalifaalhasan.porto.social atau khalifaalhasan.localhost)
   if (cleanHostname.endsWith('.porto.social')) {
@@ -51,7 +62,6 @@ export async function middleware(req: NextRequest) {
     console.error('[Middleware] Custom domain lookup failed:', error);
   }
 
-  // Fallback: Default to Landing Page if no subdomain or custom domain is matched
-  const rewritePath = path === '/' ? '/landing' : `/landing${path}`;
-  return NextResponse.rewrite(new URL(rewritePath, req.url));
+  // Fallback
+  return NextResponse.next();
 }
