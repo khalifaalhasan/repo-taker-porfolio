@@ -30,13 +30,11 @@ export function ContributionGraph({ profileData }: { profileData: ProfileData | 
           {profileData.contributionWeeks.map((week, wIdx) => (
             <div key={wIdx} className="flex flex-col gap-[2px] flex-1 md:flex-none">
               {week.contributionDays.map((day, dIdx) => (
-                <TooltipProvider key={`${wIdx}-${dIdx}`} delayDuration={100}>
+                <TooltipProvider key={`${wIdx}-${dIdx}`} delay={100}>
                   <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div 
-                        className={`w-full h-1 sm:w-1.5 sm:h-1.5 md:w-[6px] md:h-[6px] lg:w-2 lg:h-2 rounded-[1px] ${getLevelColor(day.contributionLevel)} transition-all hover:ring-1 hover:ring-foreground/30 cursor-crosshair`}
-                      />
-                    </TooltipTrigger>
+                    <TooltipTrigger
+                      className={`w-full h-1 sm:w-1.5 sm:h-1.5 md:w-[6px] md:h-[6px] lg:w-2 lg:h-2 rounded-[1px] ${getLevelColor(day.contributionLevel)} transition-all hover:ring-1 hover:ring-foreground/30 cursor-crosshair border-none outline-none p-0`}
+                    />
                     <TooltipContent side="top" className="text-xs bg-popover text-popover-foreground border-border font-mono px-3 py-1.5">
                       <strong>{day.contributionCount}</strong> contributions on {new Date(day.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                     </TooltipContent>
