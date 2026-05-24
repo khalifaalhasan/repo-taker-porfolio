@@ -5,11 +5,11 @@ import { Badge } from "@/components/ui/badge";
 import { ExternalLink, Github, ArrowRight, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Image from "next/image";
+import { ProjectImage } from "@/components/web/shared/ProjectImage";
 import { Project } from "@/data/projects";
 
 export function FeaturedProjects({ projects }: { projects: Project[] }) {
-  const featuredProjects = projects.filter(p => p.featured).slice(0, 4);
+  const featuredProjects = projects.filter(p => p.featured).slice(0, 6);
 
   return (
     <section id="projects" className="py-24 bg-background">
@@ -32,23 +32,20 @@ export function FeaturedProjects({ projects }: { projects: Project[] }) {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.2, duration: 0.5 }}
-              className={`group relative flex flex-col justify-between rounded-xl md:rounded-2xl bg-card border border-border transition-all hover:-translate-y-1 hover:shadow-lg hover:border-accent/50 overflow-hidden ${index === 3 ? 'md:hidden' : ''}`}
+              transition={{ delay: index * 0.1, duration: 0.5 }}
+              className="group relative flex flex-col justify-between rounded-xl md:rounded-2xl bg-card border border-border transition-all hover:-translate-y-1 hover:shadow-lg hover:border-accent/50 overflow-hidden"
             >
               {/* Invisible link covering the entire card */}
               <Link href={`/projects/${project.slug}`} className="absolute inset-0 z-10" aria-label={`View details for ${project.title}`} />
               
               <div className="relative z-0 pointer-events-none flex flex-col h-full">
                 {project.images && project.images.length > 0 && (
-                  <div className="relative w-full h-32 md:h-48 shrink-0 border-b border-border/50 bg-secondary/30">
-                    <Image 
-                      src={project.images[0]} 
-                      alt={project.title} 
-                      fill 
-                      sizes="(max-width: 768px) 50vw, 25vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105" 
-                    />
-                  </div>
+                  <ProjectImage 
+                    src={project.images[0]} 
+                    alt={project.title} 
+                    containerClassName="border-b border-border/50 shrink-0"
+                    imageClassName="group-hover:scale-105"
+                  />
                 )}
                 <div className="flex-1 p-4 md:p-6 pb-0">
                   <h3 className="text-xs md:text-xl font-bold mb-2 md:mb-3 group-hover:text-accent transition-colors truncate md:whitespace-normal leading-tight">

@@ -71,9 +71,6 @@ export async function fetchGithubProjects(): Promise<Project[]> {
     }
     const uniqueRepos = Array.from(uniqueReposMap.values());
 
-    // Filter out forks to only show original work
-    const originalRepos = uniqueRepos.filter((repo: any) => !repo.fork);
-
     // 3. Ambil daftar repo yang di-pin via GraphQL
     let pinnedRepoNames = new Set<string>();
     try {
@@ -131,6 +128,11 @@ export async function fetchGithubProjects(): Promise<Project[]> {
       console.warn("Failed to fetch pinned repos via GraphQL", e);
     }
 
+    // Filter out forks to only show original work, BUT keep them if they are pinned!
+    const originalRepos = uniqueRepos.filter((repo: any) => !repo.fork || pinnedRepoNames.has(repo.name));
+
+
+
     // Urutkan originalRepos agar yang di-pin (featured) muncul lebih dulu
     originalRepos.sort((a: any, b: any) => {
       const aPinned = pinnedRepoNames.has(a.name) ? 1 : 0;
@@ -151,9 +153,14 @@ export async function fetchGithubProjects(): Promise<Project[]> {
       const slug = nameCounts.get(name)! > 1 ? `${repo.owner.login.toLowerCase()}-${name}` : name;
       const meta = metas.find((m: any) => m.slug === slug);
 
-      const images = meta?.images && meta.images.length > 0 ? meta.images : [
-        `https://picsum.photos/seed/${repo.id}/800/450`,
-      ];
+      const liveUrl = repo.homepage && repo.homepage.trim() !== "" ? repo.homepage : null;
+      
+      let defaultImage = `https://picsum.photos/seed/${repo.id}/800/450`;
+      if (liveUrl) {
+        defaultImage = `/api/screenshot?repo=${slug}&url=${encodeURIComponent(liveUrl)}`;
+      }
+
+      const images = meta?.images && meta.images.length > 0 ? meta.images : [defaultImage];
 
       return {
         id: repo.id.toString(),
@@ -170,8 +177,8 @@ export async function fetchGithubProjects(): Promise<Project[]> {
         isHidden: meta?.isHidden || false,
         customTitle: meta?.customTitle || null,
         customDescription: meta?.customDescription || null,
-        liveUrl: repo.homepage && repo.homepage.trim() !== "" ? repo.homepage : null,
-        featured: pinnedRepoNames.size > 0 ? pinnedRepoNames.has(repo.name) : index < 4,
+        liveUrl,
+        featured: pinnedRepoNames.size > 0 ? pinnedRepoNames.has(repo.name) : index < 6,
       };
     });
   } catch (error) {

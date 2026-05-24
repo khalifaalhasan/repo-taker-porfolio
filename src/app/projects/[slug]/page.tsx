@@ -1,7 +1,7 @@
 import { fetchGithubProject } from "@/lib/github";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
+import { ProjectImage } from "@/components/web/shared/ProjectImage";
 import { ArrowLeft, ExternalLink, Github, CheckCircle2, Lock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -52,30 +52,23 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
           {project.images && project.images.length > 0 && (
             <div className="space-y-4 pt-4">
               {/* Featured Image */}
-              <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-border/50 shadow-lg">
-                <Image 
-                  src={project.images[0]} 
-                  alt={`${project.title} featured image`} 
-                  fill 
-                  priority
-                  sizes="(max-width: 1024px) 100vw, 1024px"
-                  className="object-cover" 
-                />
-              </div>
+              <ProjectImage 
+                src={project.images[0]} 
+                alt={`${project.title} featured image`} 
+                containerClassName="rounded-2xl border border-border/50 shadow-lg"
+              />
               
               {/* Additional Images Grid */}
               {project.images.length > 1 && (
                 <div className={`grid gap-4 ${project.images.length === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-2 md:grid-cols-2'}`}>
                   {project.images.slice(1).map((img, idx) => (
-                    <div key={idx} className="relative w-full aspect-video rounded-xl overflow-hidden border border-border/50 shadow-sm">
-                      <Image 
-                        src={img} 
-                        alt={`${project.title} screenshot ${idx + 1}`} 
-                        fill 
-                        sizes="(max-width: 768px) 50vw, 33vw"
-                        className="object-cover transition-transform duration-500 hover:scale-105" 
-                      />
-                    </div>
+                    <ProjectImage 
+                      key={idx}
+                      src={img} 
+                      alt={`${project.title} screenshot ${idx + 1}`} 
+                      containerClassName="rounded-xl border border-border/50 shadow-sm"
+                      imageClassName="hover:scale-105"
+                    />
                   ))}
                 </div>
               )}

@@ -35,7 +35,7 @@ export function Footer() {
 
         <div className="border-t border-border/50 pt-8 flex items-center justify-center">
           <p className="text-sm text-muted-foreground text-center">
-            &copy; {new Date().getFullYear()} Khalifa Alhasan. All rights reserved.
+            &copy; 2026 Khalifa Alhasan. All rights reserved.
           </p>
         </div>
       </div>

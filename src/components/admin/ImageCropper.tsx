@@ -19,8 +19,10 @@ export function ImageCropper({ imageSrc, onCropComplete, onCancel, aspectRatio =
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const onCropCompleteHandler = useCallback((croppedArea: any, croppedAreaPixels: any) => {
-    setCroppedAreaPixels(croppedAreaPixels);
+  type Area = { x: number; y: number; width: number; height: number };
+
+  const onCropCompleteHandler = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
+    setCroppedAreaPixels(croppedAreaPixels as any);
   }, []);
 
   const handleSave = async () => {

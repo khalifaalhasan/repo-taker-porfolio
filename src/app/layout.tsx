@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Space_Grotesk, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/web/shared/ThemeProvider";
+import { fetchProfileData } from "@/lib/github";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-sans",
@@ -13,10 +14,14 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Khalifa Alhasan | Product Engineer",
-  description: "Portfolio and CV of Khalifa Alhasan, Product Engineer, Backend Engineer, and DevOps SRE.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const profileData = await fetchProfileData();
+  
+  return {
+    title: "Khalifa Alhasan | Product Engineer",
+    description: "Portfolio and CV of Khalifa Alhasan, Product Engineer, Backend Engineer, and DevOps SRE.",
+  };
+}
 
 export default function RootLayout({
   children,
