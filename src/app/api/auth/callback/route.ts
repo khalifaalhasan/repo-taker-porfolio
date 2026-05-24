@@ -7,8 +7,8 @@ export async function GET(request: Request) {
 
   // Jika ini adalah callback dari instalasi GitHub App
   if (installationId && setupAction === 'install') {
-    // Kita belokkan (redirect) kembali ke dashboard admin agar diproses di sana
-    return NextResponse.redirect(`${origin}/admin?installation_id=${installationId}`);
+    // Kita belokkan (redirect) kembali ke onboarding agar diproses di sana
+    return NextResponse.redirect(`${origin}/onboarding?installation_id=${installationId}`);
   }
 
   // Fallback jika ada akses nyasar
