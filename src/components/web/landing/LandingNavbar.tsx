@@ -10,6 +10,9 @@ import { ThemeToggle } from "@/components/web/shared/ThemeToggle";
 export function LandingNavbar() {
   const [isLoading, setIsLoading] = useState(false);
   const { data: session, isPending } = authClient.useSession();
+  
+  const username = session?.user?.name || "";
+  const isSuperAdmin = username.toLowerCase() === 'khalifaalhasan' || username.toLowerCase() === 'banggapunyaweb';
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -46,8 +49,8 @@ export function LandingNavbar() {
             <Link href="/admin">
               <Button size="sm" className="gap-2 font-semibold shadow-md">
                 <Rocket className="w-4 h-4" />
-                <span className="hidden sm:inline">Dashboard</span>
-                <span className="sm:hidden">Dash</span>
+                <span className="hidden sm:inline">{isSuperAdmin ? "Dashboard" : "View Portfolio"}</span>
+                <span className="sm:hidden">{isSuperAdmin ? "Dash" : "View"}</span>
               </Button>
             </Link>
           ) : (

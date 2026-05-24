@@ -10,6 +10,9 @@ export function LandingHero() {
   const [isLoading, setIsLoading] = useState(false);
   const { data: session, isPending } = authClient.useSession();
 
+  const username = session?.user?.name || "";
+  const isSuperAdmin = username.toLowerCase() === 'khalifaalhasan' || username.toLowerCase() === 'banggapunyaweb';
+
   const handleLogin = async () => {
     setIsLoading(true);
     try {
@@ -49,7 +52,7 @@ export function LandingHero() {
               <Link href="/admin">
                 <Button size="lg" className="gap-2 font-semibold shadow-lg hover:shadow-primary/25 transition-all">
                   <Rocket className="w-5 h-5" />
-                  Go to Dashboard
+                  {isSuperAdmin ? "Go to Dashboard" : "View Portfolio"}
                 </Button>
               </Link>
             ) : (
