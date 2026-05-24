@@ -2,46 +2,67 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Github, Linkedin } from "lucide-react";
+import { Github, Linkedin, Twitter, GitMerge } from "lucide-react";
 import Link from "next/link";
+import { ProfileData } from "@/lib/github";
+import { ContributionGraph } from "@/components/web/shared/ContributionGraph";
 
-export function DesktopHero() {
+export function DesktopHero({ profileData }: { profileData: ProfileData | null }) {
+  const parts = profileData?.headline?.split('·') || [];
+  const mainTitle = parts.length > 0 ? parts[0].trim() : "Product Engineer";
+  const subTitle = parts.length > 1 ? parts.slice(1).join(' · ').trim() : "Backend · DevOps · SRE";
+  
+  const bio = profileData?.bio || "I don't just build features \u2014 I own outcomes. From schema design to shipped product, I bridge engineering and product thinking to build systems that are fast, reliable, and worth building.";
   return (
-    <section id="home" className="min-h-screen flex items-center pt-24 pb-12">
-      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+    <section id="home" className="min-h-screen flex items-center pt-24 pb-12 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
         
         {/* Left Content */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col items-start max-w-2xl"
+          className="flex flex-col items-start max-w-2xl relative z-20"
         >
           <span className="text-muted-foreground font-medium mb-4 tracking-wide">
-            I am Rafi Alfattah
+            I am Khalifa Alhasan
           </span>
           
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tighter leading-[1.1] mb-6">
-            Backend & DevOps <br />
-            <span className="text-muted-foreground">Engineer</span>
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tighter leading-[1.1] mb-6">
+            {mainTitle} <br />
+            <span className="text-muted-foreground text-3xl md:text-5xl">{subTitle}</span>
           </h1>
           
           <p className="text-lg text-muted-foreground mb-10 max-w-lg leading-relaxed">
-            Building highly available systems, clean APIs, and automated infrastructure to create scalable applications that perform flawlessly.
+            {bio}
           </p>
           
-          <div className="flex flex-col gap-6">
-            <Button size="lg" variant="secondary" className="rounded-full w-fit px-8 font-medium">
-              Download CV
-            </Button>
+          <div className="flex flex-col gap-5">
+            <div className="flex items-center gap-6">
+              <Button size="lg" variant="secondary" className="rounded-full px-8 font-medium">
+                Download CV
+              </Button>
+              
+              <div className="flex items-center gap-4 text-muted-foreground">
+                {profileData?.socials?.website && (
+                  <Link href={profileData.socials.website} target="_blank" className="hover:text-foreground transition-colors p-2 rounded-full bg-secondary/50">
+                    <Linkedin className="w-5 h-5" />
+                  </Link>
+                )}
+                {profileData?.socials?.twitter && (
+                  <Link href={profileData.socials.twitter} target="_blank" className="hover:text-foreground transition-colors p-2 rounded-full bg-secondary/50">
+                    <Twitter className="w-5 h-5" />
+                  </Link>
+                )}
+                <Link href={profileData?.socials?.github || "https://github.com/khalifaalhasan"} target="_blank" className="hover:text-foreground transition-colors p-2 rounded-full bg-secondary/50">
+                  <Github className="w-5 h-5" />
+                </Link>
+              </div>
+            </div>
             
-            <div className="flex items-center gap-4 text-muted-foreground">
-              <Link href="https://linkedin.com" target="_blank" className="hover:text-foreground transition-colors p-2 rounded-full bg-secondary/50">
-                <Linkedin className="w-5 h-5" />
-              </Link>
-              <Link href="https://github.com" target="_blank" className="hover:text-foreground transition-colors p-2 rounded-full bg-secondary/50">
-                <Github className="w-5 h-5" />
-              </Link>
+            {/* Contribution Graph */}
+            <div className="w-full mt-2">
+              <ContributionGraph profileData={profileData} />
             </div>
           </div>
         </motion.div>
@@ -51,12 +72,15 @@ export function DesktopHero() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative h-[500px] w-full flex justify-end"
+          className="relative h-[450px] lg:h-[500px] w-full max-w-md mx-auto lg:ml-auto lg:mr-0 flex justify-end z-10"
         >
           {/* Avatar / Portrait Image Mock */}
-          <div className="relative w-full max-w-md h-full rounded-2xl overflow-hidden bg-secondary/20 border border-border/50 flex items-center justify-center">
-             {/* Replace this with an actual <Image src="..." /> */}
-             <span className="text-muted-foreground text-sm font-mono rotate-[-90deg]">Portrait Placeholder</span>
+          <div className="relative w-full h-full rounded-2xl overflow-hidden bg-secondary/20 border border-border/50 flex items-center justify-center">
+             {profileData?.avatarUrl ? (
+               <img src={profileData.avatarUrl} alt="Portrait" className="w-full h-full object-cover rounded-2xl relative z-10 shadow-2xl" />
+             ) : (
+               <span className="text-muted-foreground text-sm font-mono rotate-[-90deg]">Portrait Placeholder</span>
+             )}
              
              {/* Decorative glow matching theme */}
              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-accent/20 blur-[100px] rounded-full pointer-events-none" />

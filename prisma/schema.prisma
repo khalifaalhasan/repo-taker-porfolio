@@ -63,3 +63,16 @@ model Project {
 
   @@map("projects")
 }
+
+model ProjectMeta {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug              String   @unique
+  isHidden          Boolean  @default(false) @map("is_hidden")
+  images            String[] // Array of image URLs
+  customTitle       String?  @map("custom_title")
+  customDescription String?  @map("custom_description")
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz()
+  updatedAt DateTime @default(now()) @updatedAt @map("updated_at") @db.Timestamptz()
+
+  @@map("project_meta")
+}

@@ -8,7 +8,11 @@ export interface Project {
   features?: string[] | null;
   techStack: string[];
   githubUrl?: string | null;
+  githubFullName?: string;
   isPrivateRepo?: boolean;
+  isHidden?: boolean;
+  customTitle?: string | null;
+  customDescription?: string | null;
   liveUrl?: string | null;
   featured: boolean;
 }

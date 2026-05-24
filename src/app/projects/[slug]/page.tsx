@@ -1,4 +1,4 @@
-import { projectsData } from "@/data/projects";
+import { fetchGithubProject } from "@/lib/github";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 
 export default async function ProjectDetail({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const project = projectsData.find(p => p.slug === slug);
+  const project = await fetchGithubProject(slug);
   
   if (!project) return notFound();
 

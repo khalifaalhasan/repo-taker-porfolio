@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Rafi Alfattah | Fullstack Engineer",
-  description: "Portfolio and CV of Rafi Alfattah, Fullstack Engineer, Backend Engineer, and DevOps Engineer.",
+  title: "Khalifa Alhasan | Product Engineer",
+  description: "Portfolio and CV of Khalifa Alhasan, Product Engineer, Backend Engineer, and DevOps SRE.",
 };
 
 export default function RootLayout({

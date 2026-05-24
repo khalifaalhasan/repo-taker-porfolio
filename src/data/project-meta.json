@@ -1,0 +1,25 @@
+[
+  {
+    "slug": "khalifaalhasan-readme",
+    "isHidden": false,
+    "images": [],
+    "createdAt": "2026-05-24T09:40:04.394Z",
+    "updatedAt": "2026-05-24T09:41:07.473Z"
+  },
+  {
+    "slug": "next-booking-platform",
+    "isHidden": false,
+    "images": [
+      "https://akaelroxofstpaftrglz.supabase.co/storage/v1/object/public/portfolio/projects/1779616232302-Screenshot_From_2026-05-24_16-50-14.png"
+    ],
+    "createdAt": "2026-05-24T09:50:38.562Z",
+    "updatedAt": "2026-05-24T09:50:38.562Z"
+  },
+  {
+    "slug": "passify-be",
+    "isHidden": false,
+    "images": [],
+    "createdAt": "2026-05-24T09:54:53.438Z",
+    "updatedAt": "2026-05-24T09:58:11.273Z"
+  }
+]

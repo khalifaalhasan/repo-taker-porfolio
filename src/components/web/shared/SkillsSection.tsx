@@ -5,23 +5,23 @@ import { motion } from "framer-motion";
 const skillCategories = [
   {
     id: "1",
-    category: "Languages",
-    skills: ["Go", "TypeScript", "Python", "Rust", "SQL"],
+    category: "Languages & Frameworks",
+    skills: ["Go", "Node.js", "NestJS", "Spring", "Laravel", "Python", "TypeScript", "Next.js", "React", "Tailwind"],
   },
   {
     id: "2",
-    category: "Backend Tech",
-    skills: ["Node.js", "Express", "gRPC", "GraphQL", "Redis"],
+    category: "Data & Brokers",
+    skills: ["PostgreSQL", "MySQL", "Redis", "SQLite", "RabbitMQ"],
   },
   {
     id: "3",
-    category: "DevOps Tools",
-    skills: ["Docker", "Kubernetes", "Terraform", "GitHub Actions"],
+    category: "DevOps & Cloud",
+    skills: ["Docker", "Linux", "Nginx", "Nginx Proxy Manager", "Traefik", "Caddy", "GitHub Actions", "Cloudflare", "GCP", "Vercel"],
   },
   {
     id: "4",
-    category: "Databases",
-    skills: ["PostgreSQL", "MongoDB", "Elasticsearch", "Prisma"],
+    category: "Tools & Ecosystem",
+    skills: ["Supabase", "Firebase", "Postman", "DBeaver", "Cursor", "Claude Code", "Google Antigravity", "Notion", "ClickUp"],
   },
 ];
 

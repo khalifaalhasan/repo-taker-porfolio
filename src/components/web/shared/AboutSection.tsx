@@ -14,7 +14,10 @@ const stats = [
   { value: "10+", label: "Clients Served" },
 ];
 
-export function AboutSection() {
+import { ProfileData } from "@/lib/github";
+
+export function AboutSection({ profileData }: { profileData: ProfileData | null }) {
+  const bio = profileData?.bio || "I'm a Product Engineer who thrives at the intersection of product strategy, backend architecture, and resilient infrastructure. Rather than just writing code to specification, I focus on the end-to-end lifecycle—from initial schema design to seamless deployments—ensuring that every system built is fast, reliable, and genuinely solves the problem at hand.";
   return (
     <section id="about" className="py-24 bg-background">
       <div className="max-w-7xl mx-auto px-4 md:px-6">
@@ -26,8 +29,8 @@ export function AboutSection() {
           className="text-center mb-12"
         >
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">About Me</h2>
-          <p className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-4xl mx-auto">
-            I&apos;m a backend and DevOps engineer passionate about crafting resilient, highly-available digital infrastructure. I focus on turning complex business logic into seamless API endpoints by understanding scaling needs, designing thoughtful schemas, and ensuring smooth deployments across cloud environments.
+          <p className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-4xl mx-auto whitespace-pre-wrap">
+            {bio}
           </p>
         </motion.div>
 

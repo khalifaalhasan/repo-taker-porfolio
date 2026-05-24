@@ -2,14 +2,14 @@
 
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
-import { ExternalLink, Github, ArrowRight } from "lucide-react";
+import { ExternalLink, Github, ArrowRight, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-import { projectsData } from "@/data/projects";
+import { Project } from "@/data/projects";
 
-export function FeaturedProjects() {
-  const featuredProjects = projectsData.filter(p => p.featured).slice(0, 4);
+export function FeaturedProjects({ projects }: { projects: Project[] }) {
+  const featuredProjects = projects.filter(p => p.featured).slice(0, 4);
 
   return (
     <section id="projects" className="py-24 bg-background">
@@ -67,11 +67,15 @@ export function FeaturedProjects() {
                 </div>
               </div>
               <div className="relative z-20 flex items-center gap-3 md:gap-4 pt-3 md:pt-4 border-t border-border/50 mt-auto mx-4 md:mx-6 mb-4 md:mb-6">
-                {project.githubUrl && (
+                {project.githubUrl ? (
                   <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors" aria-label="GitHub Repository">
                     <Github className="w-4 h-4 md:w-5 md:h-5" />
                   </a>
-                )}
+                ) : project.isPrivateRepo ? (
+                  <div className="text-muted-foreground/50" aria-label="Private Repository" title="Private Repository">
+                    <Lock className="w-4 h-4 md:w-5 md:h-5" />
+                  </div>
+                ) : null}
                 {project.liveUrl && (
                   <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors" aria-label="Live Demo">
                     <ExternalLink className="w-4 h-4 md:w-5 md:h-5" />

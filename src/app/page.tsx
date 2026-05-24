@@ -5,19 +5,24 @@ import { ServicesSection } from "@/components/web/shared/ServicesSection";
 import { SkillsSection } from "@/components/web/shared/SkillsSection";
 import { AboutSection } from "@/components/web/shared/AboutSection";
 import { Footer } from "@/components/web/shared/Footer";
+import { fetchGithubProjects, fetchProfileData } from "@/lib/github";
 
-export default function Home() {
+export default async function Home() {
+  const allProjects = await fetchGithubProjects();
+  const projects = allProjects.filter(p => !p.isHidden);
+  const profileData = await fetchProfileData();
+
   return (
     <>
       <ResponsiveNavbar />
       
       <main className="flex min-h-screen flex-col w-full overflow-hidden">
-        <ResponsiveHero />
+        <ResponsiveHero profileData={profileData} />
         
         <ServicesSection />
-        <AboutSection />
+        <AboutSection profileData={profileData} />
         <SkillsSection />
-        <FeaturedProjects />
+        <FeaturedProjects projects={projects} />
       </main>
 
       <Footer />

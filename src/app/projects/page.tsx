@@ -1,10 +1,22 @@
-import { projectsData } from "@/data/projects";
+import { fetchGithubProjects } from "@/lib/github";
 import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 
-export default function ProjectsPage() {
+export default async function ProjectsPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
+  const params = await searchParams;
+  const page = parseInt(params.page || "1", 10);
+  const limit = 12;
+  
+  const allProjects = await fetchGithubProjects();
+  const visibleProjects = allProjects.filter(p => !p.isHidden);
+  
+  const totalProjects = visibleProjects.length;
+  const totalPages = Math.ceil(totalProjects / limit);
+  const currentProjects = visibleProjects.slice((page - 1) * limit, page * limit);
+  
   return (
     <main className="min-h-screen bg-background pt-24 pb-12">
       <div className="max-w-7xl mx-auto px-6">
@@ -17,7 +29,7 @@ export default function ProjectsPage() {
         <div className="w-20 h-1 bg-accent mb-12" />
 
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
-          {projectsData.map((project) => (
+          {currentProjects.map((project) => (
             <Link key={project.id} href={`/projects/${project.slug}`} className="group flex flex-col justify-between rounded-xl md:rounded-2xl bg-card border border-border transition-all hover:-translate-y-1 hover:shadow-lg hover:border-accent/50 overflow-hidden">
               <div className="flex flex-col h-full">
                 {project.images && project.images.length > 0 && (
@@ -53,6 +65,30 @@ export default function ProjectsPage() {
             </Link>
           ))}
         </div>
+
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center mt-16 gap-4">
+            {page > 1 ? (
+              <Link href={`/projects?page=${page - 1}`}>
+                <Button variant="outline">Previous</Button>
+              </Link>
+            ) : (
+              <Button variant="outline" disabled>Previous</Button>
+            )}
+            
+            <span className="text-sm font-medium text-muted-foreground">
+              Page {page} of {totalPages}
+            </span>
+            
+            {page < totalPages ? (
+              <Link href={`/projects?page=${page + 1}`}>
+                <Button variant="outline">Next</Button>
+              </Link>
+            ) : (
+              <Button variant="outline" disabled>Next</Button>
+            )}
+          </div>
+        )}
       </div>
     </main>
   );
