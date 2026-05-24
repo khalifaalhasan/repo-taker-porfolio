@@ -22,6 +22,7 @@ export async function middleware(req: NextRequest) {
 
   // Remove port for localhost testing
   const cleanHostname = hostname.split(':')[0]; 
+  console.log(`[Middleware] Hostname: ${hostname}, Clean: ${cleanHostname}, Path: ${path}`);
 
   // Logika 1: Landing Page / Main Application
   if (
@@ -29,16 +30,19 @@ export async function middleware(req: NextRequest) {
     cleanHostname === 'porto.social' ||
     cleanHostname === 'www.porto.social'
   ) {
-    return NextResponse.next();
+    const rewritePath = path === '/' ? '/landing' : `/landing${path}`;
+    return NextResponse.rewrite(new URL(rewritePath, req.url));
   }
 
   // Logika 2: Subdomain (e.g. khalifaalhasan.porto.social atau khalifaalhasan.localhost)
   if (cleanHostname.endsWith('.porto.social')) {
     const username = cleanHostname.replace('.porto.social', '');
-    return NextResponse.rewrite(new URL(`/${username}${path}`, req.url));
+    const rewritePath = path === '/' ? `/${username}` : `/${username}${path}`;
+    return NextResponse.rewrite(new URL(rewritePath, req.url));
   } else if (cleanHostname.endsWith('.localhost')) {
     const username = cleanHostname.replace('.localhost', '');
-    return NextResponse.rewrite(new URL(`/${username}${path}`, req.url));
+    const rewritePath = path === '/' ? `/${username}` : `/${username}${path}`;
+    return NextResponse.rewrite(new URL(rewritePath, req.url));
   }
 
   // Logika 3: Custom Domain
