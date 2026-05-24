@@ -35,8 +35,10 @@ export function LandingHero() {
           </div>
         </div>
         <div className="text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-primary animate-in fade-in slide-in-from-bottom-4 duration-1000">
-            Zero-DB Developer Portfolios
+          <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl animate-in fade-in slide-in-from-bottom-4 duration-1000 leading-tight">
+            Code. Push. <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-primary">Deployed.</span>
+            <br />
+            Your automated developer portfolio.
           </h1>
           <p className="mt-6 text-lg leading-8 text-muted-foreground animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-150">
             Generate a stunning, edge-cached portfolio instantly from your GitHub profile. No database required. Fully automated.
