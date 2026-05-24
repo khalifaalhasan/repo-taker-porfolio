@@ -38,11 +38,11 @@
 **Konteks:** Domain utama adalah `porto.social` (untuk pendaftaran SaaS/Landing Page). Setiap user akan mendapatkan subdomain otomatis seperti `khalifaalhasan.porto.social`. Jika nanti ada fitur berbayar, kita akan mengaktifkan rute custom domain.
 
 **Instruksi Detail:**
-- [ ] Buat file `middleware.ts` di root directory.
-- [ ] Tangkap `hostname` dari setiap request yang masuk.
-- [ ] **Logika 1 (Landing Page):** Jika hostname adalah `localhost`, `porto.social`, atau `www.porto.social`, biarkan request diteruskan ke `app/page.tsx`.
-- [ ] **Logika 2 (Subdomain):** Jika hostname berakhiran `.porto.social`, ekstrak username-nya (misal: `khalifaalhasan`), lalu gunakan `NextResponse.rewrite()` untuk mengarahkannya ke halaman dinamis, contoh: `app/[domain]/page.tsx`.
-- [ ] **Logika 3 (Custom Domain - Persiapan MVP):** Jika hostname bukan keduanya, lakukan pencarian ke API internal/Prisma untuk mengecek pemilik custom domain tersebut, lalu rewrite ke direktori pengguna yang sama.
+- [x] Buat file `middleware.ts` di root directory.
+- [x] Tangkap `hostname` dari setiap request yang masuk.
+- [x] **Logika 1 (Landing Page):** Jika hostname adalah `localhost`, `porto.social`, atau `www.porto.social`, biarkan request diteruskan ke `app/page.tsx`.
+- [x] **Logika 2 (Subdomain):** Jika hostname berakhiran `.porto.social`, ekstrak username-nya (misal: `khalifaalhasan`), lalu gunakan `NextResponse.rewrite()` untuk mengarahkannya ke halaman dinamis, contoh: `app/[domain]/page.tsx`.
+- [x] **Logika 3 (Custom Domain - Persiapan MVP):** Jika hostname bukan keduanya, lakukan pencarian ke API internal/Prisma untuk mengecek pemilik custom domain tersebut, lalu rewrite ke direktori pengguna yang sama.
 
 ---
 
