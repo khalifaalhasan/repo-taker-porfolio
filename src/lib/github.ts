@@ -153,9 +153,14 @@ export async function fetchGithubProjects(): Promise<Project[]> {
       const slug = nameCounts.get(name)! > 1 ? `${repo.owner.login.toLowerCase()}-${name}` : name;
       const meta = metas.find((m: any) => m.slug === slug);
 
-      const images = meta?.images && meta.images.length > 0 ? meta.images : [
-        `https://picsum.photos/seed/${repo.id}/800/450`,
-      ];
+      const liveUrl = repo.homepage && repo.homepage.trim() !== "" ? repo.homepage : null;
+      
+      let defaultImage = `https://picsum.photos/seed/${repo.id}/800/450`;
+      if (liveUrl) {
+        defaultImage = `https://api.microlink.io/?url=${encodeURIComponent(liveUrl)}&screenshot=true&meta=false&embed=screenshot.url`;
+      }
+
+      const images = meta?.images && meta.images.length > 0 ? meta.images : [defaultImage];
 
       return {
         id: repo.id.toString(),
@@ -172,7 +177,7 @@ export async function fetchGithubProjects(): Promise<Project[]> {
         isHidden: meta?.isHidden || false,
         customTitle: meta?.customTitle || null,
         customDescription: meta?.customDescription || null,
-        liveUrl: repo.homepage && repo.homepage.trim() !== "" ? repo.homepage : null,
+        liveUrl,
         featured: pinnedRepoNames.size > 0 ? pinnedRepoNames.has(repo.name) : index < 6,
       };
     });
