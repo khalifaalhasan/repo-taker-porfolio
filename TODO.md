@@ -16,10 +16,10 @@
 **Konteks:** Menggunakan GitHub OAuth App untuk proses login dan identity.
 
 **Instruksi Detail:**
-- [ ] Buat file konfigurasi `lib/auth.ts` menggunakan library `better-auth`.
-- [ ] Terapkan `prismaAdapter` untuk menghubungkan Better Auth dengan Prisma Client.
-- [ ] Aktifkan social provider `github` dengan membaca kredensial dari `process.env.GITHUB_CLIENT_ID` dan `process.env.GITHUB_CLIENT_SECRET`.
-- [ ] Buat Route Handler Next.js di `app/api/auth/[...all]/route.ts` untuk menangani endpoint login/callback standar dari Better Auth.
+- [x] Buat file konfigurasi `lib/auth.ts` menggunakan library `better-auth`.
+- [x] Terapkan `prismaAdapter` untuk menghubungkan Better Auth dengan Prisma Client.
+- [x] Aktifkan social provider `github` dengan membaca kredensial dari `process.env.GITHUB_CLIENT_ID` dan `process.env.GITHUB_CLIENT_SECRET`.
+- [x] Buat Route Handler Next.js di `app/api/auth/[...all]/route.ts` untuk menangani endpoint login/callback standar dari Better Auth.
 
 ---
 
