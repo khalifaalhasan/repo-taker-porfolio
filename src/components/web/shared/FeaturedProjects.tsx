@@ -9,7 +9,7 @@ import Image from "next/image";
 import { Project } from "@/data/projects";
 
 export function FeaturedProjects({ projects }: { projects: Project[] }) {
-  const featuredProjects = projects.filter(p => p.featured).slice(0, 4);
+  const featuredProjects = projects.filter(p => p.featured).slice(0, 6);
 
   return (
     <section id="projects" className="py-24 bg-background">
@@ -32,8 +32,8 @@ export function FeaturedProjects({ projects }: { projects: Project[] }) {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.2, duration: 0.5 }}
-              className={`group relative flex flex-col justify-between rounded-xl md:rounded-2xl bg-card border border-border transition-all hover:-translate-y-1 hover:shadow-lg hover:border-accent/50 overflow-hidden ${index === 3 ? 'md:hidden' : ''}`}
+              transition={{ delay: index * 0.1, duration: 0.5 }}
+              className="group relative flex flex-col justify-between rounded-xl md:rounded-2xl bg-card border border-border transition-all hover:-translate-y-1 hover:shadow-lg hover:border-accent/50 overflow-hidden"
             >
               {/* Invisible link covering the entire card */}
               <Link href={`/projects/${project.slug}`} className="absolute inset-0 z-10" aria-label={`View details for ${project.title}`} />
