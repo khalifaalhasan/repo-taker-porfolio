@@ -61,7 +61,7 @@
 **Konteks:** Kita ingin recruiter merasakan load time 0 detik. Kita butuh sebuah API Route khusus yang akan dieksekusi oleh GitHub Actions untuk "memanaskan" cache Next.js Image sebelum perekrut datang.
 
 **Instruksi Detail:**
-- [ ] Buat Route Handler di `app/api/warmup/route.ts`.
-- [ ] Lindungi endpoint ini dengan secret key dari `.env`.
-- [ ] Di dalam fungsinya, fetch data repositori user, lalu lakukan simulasi HTTP GET (`fetch()`) ke endpoint internal Next.js `/_next/image?url=URL_MICROLINK&w=1080&q=75`.
-- [ ] Proses ini akan memaksa Next.js mengunduh gambar dari Microlink dan menyimpannya ke Edge Cache Vercel/Server secara permanen.
+- [x] Buat Route Handler di `app/api/warmup/route.ts`.
+- [x] Lindungi endpoint ini dengan secret key dari `.env`.
+- [x] Di dalam fungsinya, fetch data repositori user, lalu lakukan simulasi HTTP GET (`fetch()`) ke endpoint internal Next.js `/_next/image?url=URL_MICROLINK&w=1080&q=75`.
+- [x] Proses ini akan memaksa Next.js mengunduh gambar dari Microlink dan menyimpannya ke Edge Cache Vercel/Server secara permanen.
