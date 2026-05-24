@@ -14,7 +14,7 @@ export default async function Home() {
 
   return (
     <>
-      <ResponsiveNavbar />
+      <ResponsiveNavbar profileData={profileData} />
       
       <main className="flex min-h-screen flex-col w-full overflow-hidden">
         <ResponsiveHero profileData={profileData} />

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/web/shared/ThemeToggle";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { ProfileData } from "@/lib/github";
 
 const navLinks = [
   { name: "Home", href: "/#home" },
@@ -14,7 +14,7 @@ const navLinks = [
   { name: "Projects", href: "/#projects" },
 ];
 
-export function DesktopNavbar() {
+export function DesktopNavbar({ profileData }: { profileData?: ProfileData | null }) {
   const [activeHash, setActiveHash] = useState("/#home");
 
   useEffect(() => {
@@ -48,8 +48,12 @@ export function DesktopNavbar() {
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between pointer-events-auto">
         {/* Logo */}
         <Link href="/" className="flex items-center group">
-          <div className="w-10 h-10 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center font-bold text-lg font-sans transition-transform group-hover:scale-105 border border-border shadow-sm">
-            ra
+          <div className="w-10 h-10 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center font-bold text-lg font-sans transition-transform group-hover:scale-105 border border-border shadow-sm overflow-hidden">
+            {profileData?.avatarUrl ? (
+              <img src={profileData.avatarUrl} alt="Logo" className="w-full h-full object-cover" />
+            ) : (
+              "ka"
+            )}
           </div>
         </Link>
 
