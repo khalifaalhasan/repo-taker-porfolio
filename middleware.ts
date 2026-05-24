@@ -32,9 +32,12 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  // Logika 2: Subdomain (e.g. khalifaalhasan.porto.social)
+  // Logika 2: Subdomain (e.g. khalifaalhasan.porto.social atau khalifaalhasan.localhost)
   if (cleanHostname.endsWith('.porto.social')) {
     const username = cleanHostname.replace('.porto.social', '');
+    return NextResponse.rewrite(new URL(`/${username}${path}`, req.url));
+  } else if (cleanHostname.endsWith('.localhost')) {
+    const username = cleanHostname.replace('.localhost', '');
     return NextResponse.rewrite(new URL(`/${username}${path}`, req.url));
   }
 
