@@ -45,6 +45,24 @@ export async function getGitHubInstallationToken(installationId: string): Promis
   return data.token; // Expires in 1 hour by default
 }
 
+export async function getInstallationDetails(installationId: string) {
+  const appJwt = generateAppJwt();
+  const response = await fetch(`https://api.github.com/app/installations/${installationId}`, {
+    headers: {
+      'Authorization': `Bearer ${appJwt}`,
+      'Accept': 'application/vnd.github.v3+json',
+      'User-Agent': 'Portfolio-CV-Generator'
+    },
+    cache: 'no-store'
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to get installation details: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
 export async function getPortfolioMarkdown(username: string, repo: string, installationId: string): Promise<string | null> {
   try {
     const token = await getGitHubInstallationToken(installationId);
