@@ -8,8 +8,9 @@ import { Footer } from "@/components/web/shared/Footer";
 import { fetchGithubProjects, fetchProfileData } from "@/lib/github";
 import { Metadata } from "next";
 
-export async function generateMetadata({ params }: { params: { domain: string } }): Promise<Metadata> {
-  const username = params.domain;
+export async function generateMetadata({ params }: { params: Promise<{ domain: string }> }): Promise<Metadata> {
+  const resolvedParams = await params;
+  const username = resolvedParams.domain;
   const profileData = await fetchProfileData(username);
   
   if (!profileData) {
@@ -22,8 +23,9 @@ export async function generateMetadata({ params }: { params: { domain: string } 
   };
 }
 
-export default async function Home({ params }: { params: { domain: string } }) {
-  const username = params.domain;
+export default async function Home({ params }: { params: Promise<{ domain: string }> }) {
+  const resolvedParams = await params;
+  const username = resolvedParams.domain;
   const allProjects = await fetchGithubProjects(username);
   const projects = allProjects.filter(p => !p.isHidden);
   const profileData = await fetchProfileData(username);
