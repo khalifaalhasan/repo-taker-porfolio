@@ -27,10 +27,10 @@
 **Konteks:** Setelah user login, kita butuh akses membaca file Markdown dari repositori GitHub mereka menggunakan metode GitHub App Authentication. Private key tersimpan di local environment.
 
 **Instruksi Detail:**
-- [ ] Buat folder/file utilitas di `lib/github/auth.ts`.
-- [ ] Gunakan library seperti `jsonwebtoken` (atau `jose`) untuk membaca file `portfolio-zero-db.private-key.pem` dari direktori rahasia lokal (`.secret`).
-- [ ] Buat fungsi `getGitHubInstallationToken(installationId)` yang men-generate JWT dan menukarnya dengan akses token sementara dari API GitHub.
-- [ ] Buat fungsi fetcher `getPortfolioMarkdown(username, repo)` yang menggunakan token tersebut untuk mengambil file `overview.md` (atau `README`) secara stateless tanpa menyimpannya ke database.
+- [x] Buat folder/file utilitas di `lib/github/auth.ts`.
+- [x] Gunakan library seperti `jsonwebtoken` (atau `jose`) untuk membaca file `portfolio-zero-db.private-key.pem` dari direktori rahasia lokal (`.secret`).
+- [x] Buat fungsi `getGitHubInstallationToken(installationId)` yang men-generate JWT dan menukarnya dengan akses token sementara dari API GitHub.
+- [x] Buat fungsi fetcher `getPortfolioMarkdown(username, repo)` yang menggunakan token tersebut untuk mengambil file `overview.md` (atau `README`) secara stateless tanpa menyimpannya ke database.
 
 ---
 
