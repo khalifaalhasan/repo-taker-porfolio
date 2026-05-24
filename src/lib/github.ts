@@ -9,6 +9,7 @@ export interface ContributionDay {
 }
 
 export interface ProfileData {
+  name: string;
   headline: string;
   bio: string;
   avatarUrl?: string;
@@ -327,6 +328,7 @@ export async function fetchProfileData(username: string = "khalifaalhasan"): Pro
     }
 
     return { 
+      name: userData.name || username,
       headline, 
       bio,
       avatarUrl: userData.avatar_url,

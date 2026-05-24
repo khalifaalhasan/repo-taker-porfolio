@@ -1,13 +1,16 @@
 import Link from "next/link";
 import { Github, Linkedin, Twitter } from "lucide-react";
 
-export function Footer() {
+import { ProfileData } from "@/lib/github";
+
+export function Footer({ profileData }: { profileData?: ProfileData | null }) {
+  const name = profileData?.name || "Porto.social";
   return (
     <footer className="bg-background border-t border-border pt-12 pb-32 md:py-12">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
           <div className="text-center md:text-left">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">Khalifa Alhasan</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">{name}</h2>
             <p className="text-sm font-mono text-muted-foreground mt-1">
               Building scalable systems & clean APIs
             </p>
@@ -35,7 +38,7 @@ export function Footer() {
 
         <div className="border-t border-border/50 pt-8 flex items-center justify-center">
           <p className="text-sm text-muted-foreground text-center">
-            &copy; 2026 Khalifa Alhasan. All rights reserved.
+            &copy; {new Date().getFullYear()} {name}. All rights reserved.
           </p>
         </div>
       </div>

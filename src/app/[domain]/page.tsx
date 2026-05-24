@@ -41,7 +41,7 @@ export default async function Home({ params }: { params: { domain: string } }) {
         <FeaturedProjects projects={projects} />
       </main>
 
-      <Footer />
+      <Footer profileData={profileData} />
     </>
   );
 }
