@@ -50,10 +50,10 @@
 **Konteks:** Render UI portofolio harus secepat kilat. Kita tidak akan menyimpan screenshot repository ke dalam storage. Kita menggunakan Microlink untuk men-generate gambar perangkat, dan memanfaatkan Next.js Image Edge Cache.
 
 **Instruksi Detail:**
-- [ ] Buat utility function `getOptimizedScreenshotUrl(repoUrl)` yang me-return URL API Microlink.
-- [ ] URL tersebut harus menyertakan parameter `waitForTimeout=2500` (agar animasi web selesai sebelum di-screenshot) dan `device=iphone 13` (atau macbook).
-- [ ] Konfigurasi `next.config.mjs` di bagian `images.remotePatterns` agar mengizinkan `api.microlink.io` dengan `minimumCacheTTL` yang sangat tinggi (misal: 1 bulan).
-- [ ] Saat render di komponen `<Image />`, gunakan URL dari utility tersebut.
+- [x] Buat utility function `getOptimizedScreenshotUrl(repoUrl)` yang me-return URL API Microlink.
+- [x] URL tersebut harus menyertakan parameter `waitForTimeout=2500` (agar animasi web selesai sebelum di-screenshot) dan `device=iphone 13` (atau macbook).
+- [x] Konfigurasi `next.config.mjs` di bagian `images.remotePatterns` agar mengizinkan `api.microlink.io` dengan `minimumCacheTTL` yang sangat tinggi (misal: 1 bulan).
+- [x] Saat render di komponen `<Image />`, gunakan URL dari utility tersebut.
 
 ---
 

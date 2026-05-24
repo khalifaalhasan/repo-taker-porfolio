@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import Image from "next/image";
 
 interface ProjectImageProps {
   src: string;
@@ -26,9 +27,11 @@ export function ProjectImage({ src, alt, containerClassName = "", imageClassName
         </div>
       )}
       
-      <img
+      <Image
         src={src}
         alt={alt}
+        width={1920}
+        height={1080}
         onLoad={() => setIsLoading(false)}
         className={`w-full transition-all duration-700 ${
           // On mobile: object-cover (fills the 16:9 container, might crop). 

@@ -1,5 +1,6 @@
 import { Project } from "@/data/projects";
 import { getProjectMetas } from "./projectMetaStore";
+import { getOptimizedScreenshotUrl } from "./microlink";
 
 export interface ContributionDay {
   date: string;
@@ -157,7 +158,7 @@ export async function fetchGithubProjects(): Promise<Project[]> {
       
       let defaultImage = `https://picsum.photos/seed/${repo.id}/800/450`;
       if (liveUrl) {
-        defaultImage = `/api/screenshot?repo=${slug}&url=${encodeURIComponent(liveUrl)}`;
+        defaultImage = getOptimizedScreenshotUrl(liveUrl);
       }
 
       const images = meta?.images && meta.images.length > 0 ? meta.images : [defaultImage];
