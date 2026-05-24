@@ -58,7 +58,7 @@ export function ImageCropper({ imageSrc, onCropComplete, onCancel, aspectRatio =
             min={1} 
             max={3} 
             step={0.1} 
-            onValueChange={(val) => setZoom(val[0])} 
+            onValueChange={(val) => setZoom(typeof val === 'number' ? val : val[0])} 
           />
         </div>
         <div className="flex gap-3 w-full sm:w-auto">
