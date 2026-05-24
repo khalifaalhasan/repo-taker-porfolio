@@ -71,9 +71,6 @@ export async function fetchGithubProjects(): Promise<Project[]> {
     }
     const uniqueRepos = Array.from(uniqueReposMap.values());
 
-    // Filter out forks to only show original work
-    const originalRepos = uniqueRepos.filter((repo: any) => !repo.fork);
-
     // 3. Ambil daftar repo yang di-pin via GraphQL
     let pinnedRepoNames = new Set<string>();
     try {
@@ -130,6 +127,11 @@ export async function fetchGithubProjects(): Promise<Project[]> {
     } catch (e) {
       console.warn("Failed to fetch pinned repos via GraphQL", e);
     }
+
+    // Filter out forks to only show original work, BUT keep them if they are pinned!
+    const originalRepos = uniqueRepos.filter((repo: any) => !repo.fork || pinnedRepoNames.has(repo.name));
+
+
 
     // Urutkan originalRepos agar yang di-pin (featured) muncul lebih dulu
     originalRepos.sort((a: any, b: any) => {
