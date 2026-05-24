@@ -24,15 +24,6 @@ export async function middleware(req: NextRequest) {
   const cleanHostname = hostname.split(':')[0]; 
   console.log(`[Middleware] Hostname: ${hostname}, Clean: ${cleanHostname}, Path: ${path}`);
 
-  // Logika 1: Landing Page / Main Application
-  if (
-    cleanHostname === 'localhost' ||
-    cleanHostname === 'porto.social' ||
-    cleanHostname === 'www.porto.social'
-  ) {
-    const rewritePath = path === '/' ? '/landing' : `/landing${path}`;
-    return NextResponse.rewrite(new URL(rewritePath, req.url));
-  }
 
   // Logika 2: Subdomain (e.g. khalifaalhasan.porto.social atau khalifaalhasan.localhost)
   if (cleanHostname.endsWith('.porto.social')) {
@@ -60,6 +51,7 @@ export async function middleware(req: NextRequest) {
     console.error('[Middleware] Custom domain lookup failed:', error);
   }
 
-  // Fallback
-  return NextResponse.next();
+  // Fallback: Default to Landing Page if no subdomain or custom domain is matched
+  const rewritePath = path === '/' ? '/landing' : `/landing${path}`;
+  return NextResponse.rewrite(new URL(rewritePath, req.url));
 }
