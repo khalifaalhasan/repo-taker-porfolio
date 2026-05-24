@@ -4,9 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Github, Rocket, ArrowRight } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
+import Link from "next/link";
 
 export function LandingHero() {
   const [isLoading, setIsLoading] = useState(false);
+  const { data: session, isPending } = authClient.useSession();
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -43,10 +45,19 @@ export function LandingHero() {
             Generate a stunning, edge-cached portfolio instantly from your GitHub profile. No database required. Fully automated.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6 animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300">
-            <Button size="lg" onClick={handleLogin} disabled={isLoading} className="gap-2 font-semibold shadow-lg hover:shadow-primary/25 transition-all">
-              {isLoading ? <Rocket className="animate-spin w-5 h-5" /> : <Github className="w-5 h-5" />}
-              {isLoading ? "Connecting..." : "Continue with GitHub"}
-            </Button>
+            {session ? (
+              <Link href="/admin">
+                <Button size="lg" className="gap-2 font-semibold shadow-lg hover:shadow-primary/25 transition-all">
+                  <Rocket className="w-5 h-5" />
+                  Go to Dashboard
+                </Button>
+              </Link>
+            ) : (
+              <Button size="lg" onClick={handleLogin} disabled={isLoading || isPending} className="gap-2 font-semibold shadow-lg hover:shadow-primary/25 transition-all">
+                {isLoading || isPending ? <Rocket className="animate-spin w-5 h-5" /> : <Github className="w-5 h-5" />}
+                {isLoading || isPending ? "Connecting..." : "Continue with GitHub"}
+              </Button>
+            )}
             <a href="#features" className="text-sm font-semibold leading-6 text-foreground hover:text-primary transition-colors flex items-center gap-1 group">
               Learn more <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </a>

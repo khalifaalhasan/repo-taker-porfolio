@@ -4,10 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Github, Rocket } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
+import Link from "next/link";
 import { ThemeToggle } from "@/components/web/shared/ThemeToggle";
 
 export function LandingNavbar() {
   const [isLoading, setIsLoading] = useState(false);
+  const { data: session, isPending } = authClient.useSession();
 
   const handleLogin = async () => {
     setIsLoading(true);
@@ -40,11 +42,21 @@ export function LandingNavbar() {
 
         <div className="flex items-center gap-4">
           <ThemeToggle />
-          <Button onClick={handleLogin} disabled={isLoading} size="sm" className="gap-2 font-semibold shadow-md">
-            {isLoading ? <Rocket className="animate-spin w-4 h-4" /> : <Github className="w-4 h-4" />}
-            <span className="hidden sm:inline">{isLoading ? "Connecting..." : "Login"}</span>
-            <span className="sm:hidden">{isLoading ? "..." : "Login"}</span>
-          </Button>
+          {session ? (
+            <Link href="/admin">
+              <Button size="sm" className="gap-2 font-semibold shadow-md">
+                <Rocket className="w-4 h-4" />
+                <span className="hidden sm:inline">Dashboard</span>
+                <span className="sm:hidden">Dash</span>
+              </Button>
+            </Link>
+          ) : (
+            <Button onClick={handleLogin} disabled={isLoading || isPending} size="sm" className="gap-2 font-semibold shadow-md">
+              {isLoading || isPending ? <Rocket className="animate-spin w-4 h-4" /> : <Github className="w-4 h-4" />}
+              <span className="hidden sm:inline">{isLoading || isPending ? "Connecting..." : "Login"}</span>
+              <span className="sm:hidden">{isLoading || isPending ? "..." : "Login"}</span>
+            </Button>
+          )}
         </div>
       </div>
     </nav>
