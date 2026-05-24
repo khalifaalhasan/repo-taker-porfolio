@@ -171,7 +171,7 @@ export async function fetchGithubProjects(): Promise<Project[]> {
         customTitle: meta?.customTitle || null,
         customDescription: meta?.customDescription || null,
         liveUrl: repo.homepage && repo.homepage.trim() !== "" ? repo.homepage : null,
-        featured: pinnedRepoNames.size > 0 ? pinnedRepoNames.has(repo.name) : index < 4,
+        featured: pinnedRepoNames.size > 0 ? pinnedRepoNames.has(repo.name) : index < 6,
       };
     });
   } catch (error) {
