@@ -33,6 +33,9 @@ export async function middleware(req: NextRequest) {
     !cleanHostname.includes('.') || // e.g. 'localhost' or '127.0.0.1' or bare IP
     /^\d+\.\d+\.\d+\.\d+$/.test(cleanHostname) // e.g. '192.168.1.17'
   ) {
+    if (path === '/') {
+      return NextResponse.rewrite(new URL('/home', req.url));
+    }
     return NextResponse.next();
   }
 
