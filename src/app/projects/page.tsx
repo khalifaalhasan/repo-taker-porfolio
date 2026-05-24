@@ -1,6 +1,6 @@
 import { fetchGithubProjects } from "@/lib/github";
 import Link from "next/link";
-import Image from "next/image";
+import { ProjectImage } from "@/components/web/shared/ProjectImage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -33,15 +33,12 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
             <Link key={project.id} href={`/projects/${project.slug}`} className="group flex flex-col justify-between rounded-xl md:rounded-2xl bg-card border border-border transition-all hover:-translate-y-1 hover:shadow-lg hover:border-accent/50 overflow-hidden">
               <div className="flex flex-col h-full">
                 {project.images && project.images.length > 0 && (
-                  <div className="relative w-full aspect-video shrink-0 border-b border-border/50 bg-secondary/30">
-                    <Image 
-                      src={project.images[0]} 
-                      alt={project.title} 
-                      fill 
-                      sizes="(max-width: 768px) 50vw, 33vw"
-                      className="object-cover transition-transform duration-500 group-hover:scale-105" 
-                    />
-                  </div>
+                  <ProjectImage 
+                    src={project.images[0]} 
+                    alt={project.title} 
+                    containerClassName="border-b border-border/50 shrink-0"
+                    imageClassName="group-hover:scale-105"
+                  />
                 )}
                 <div className="flex-1 p-4 md:p-6 pb-0">
                   <h3 className="text-xs md:text-xl font-bold mb-2 md:mb-3 group-hover:text-accent transition-colors leading-tight">
