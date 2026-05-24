@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { ThemeToggle } from "@/components/web/shared/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { ProfileData } from "@/lib/github";
+import { motion } from "framer-motion";
 
 const navLinks = [
   { name: "Home", href: "/#home" },
@@ -44,8 +45,9 @@ export function DesktopNavbar({ profileData }: { profileData?: ProfileData | nul
   }, []);
 
   return (
-    <header className="fixed top-0 w-full z-50 pt-6 pb-4 pointer-events-none">
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between pointer-events-auto">
+    <>
+      <header className="absolute top-0 w-full z-40 pt-6 pb-4 pointer-events-none">
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between pointer-events-auto">
         {/* Logo */}
         <Link href="/" className="flex items-center group">
           <div className="w-10 h-10 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center font-bold text-lg font-sans transition-transform group-hover:scale-105 border border-border shadow-sm overflow-hidden">
@@ -57,9 +59,24 @@ export function DesktopNavbar({ profileData }: { profileData?: ProfileData | nul
           </div>
         </Link>
 
-        {/* Centered Pill Nav */}
-        <div className="absolute left-1/2 -translate-x-1/2">
-          <nav className="hidden md:flex items-center p-1.5 rounded-full bg-background/80 backdrop-blur-md border border-border shadow-sm">
+        {/* Right CTA */}
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
+          <Button variant="secondary" className="rounded-full font-medium px-6 shadow-sm hidden sm:inline-flex">
+            Let&apos;s Talk
+          </Button>
+        </div>
+      </div>
+    </header>
+
+    {/* Sticky Pill Nav */}
+    <motion.div 
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.6, type: "spring", stiffness: 260, damping: 20 }}
+      className="fixed top-6 left-1/2 -translate-x-1/2 z-50 pointer-events-auto hidden md:block"
+    >
+      <nav className="flex items-center p-1.5 rounded-full bg-background/80 backdrop-blur-md border border-border shadow-md">
             {navLinks.map((link) => {
               const isActive = activeHash === link.href;
               return (
@@ -83,16 +100,7 @@ export function DesktopNavbar({ profileData }: { profileData?: ProfileData | nul
               );
             })}
           </nav>
-        </div>
-
-        {/* Right CTA */}
-        <div className="flex items-center gap-4">
-          <ThemeToggle />
-          <Button variant="secondary" className="rounded-full font-medium px-6 shadow-sm hidden sm:inline-flex">
-            Let&apos;s Talk
-          </Button>
-        </div>
-      </div>
-    </header>
+        </motion.div>
+    </>
   );
 }
