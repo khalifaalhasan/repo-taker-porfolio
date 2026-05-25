@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Github, Rocket } from "lucide-react";
+import { Github, Rocket, LogOut } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 import Link from "next/link";
@@ -46,13 +46,28 @@ export function LandingNavbar() {
         <div className="flex items-center gap-4">
           <ThemeToggle />
           {session ? (
-            <Link href="/admin">
-              <Button size="sm" className="gap-2 font-semibold shadow-md">
-                <Rocket className="w-4 h-4" />
-                <span className="hidden sm:inline">{isSuperAdmin ? "Dashboard" : "View Portfolio"}</span>
-                <span className="sm:hidden">{isSuperAdmin ? "Dash" : "View"}</span>
+            <div className="flex items-center gap-2">
+              <Link href="/admin">
+                <Button size="sm" className="gap-2 font-semibold shadow-md">
+                  <Rocket className="w-4 h-4" />
+                  <span className="hidden sm:inline">{isSuperAdmin ? "Dashboard" : "View Portfolio"}</span>
+                  <span className="sm:hidden">{isSuperAdmin ? "Dash" : "View"}</span>
+                </Button>
+              </Link>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={async () => {
+                  setIsLoading(true);
+                  await authClient.signOut();
+                  window.location.reload();
+                }}
+                disabled={isLoading}
+              >
+                <LogOut className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">Logout</span>
               </Button>
-            </Link>
+            </div>
           ) : (
             <Button onClick={handleLogin} disabled={isLoading || isPending} size="sm" className="gap-2 font-semibold shadow-md">
               {isLoading || isPending ? <Rocket className="animate-spin w-4 h-4" /> : <Github className="w-4 h-4" />}

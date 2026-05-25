@@ -6,7 +6,8 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Porto.social - Zero-DB Developer Portfolios",
-  description: "Generate a stunning, edge-cached portfolio instantly from your GitHub profile. No database required. Fully automated.",
+  description:
+    "Generate a stunning, edge-cached portfolio instantly from your GitHub profile. No database required. Fully automated.",
 };
 
 export default function LandingPage() {

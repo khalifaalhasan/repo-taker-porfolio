@@ -44,7 +44,7 @@ export default async function Icon() {
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={avatarUrl} width="256" height="256" style={{ borderRadius: '50%', objectFit: 'cover' }} alt="Icon" />
+        <img src={avatarUrl} width={256} height={256} style={{ borderRadius: '50%', objectFit: 'cover' }} alt="Icon" />
       </div>
     ),
     { ...size }

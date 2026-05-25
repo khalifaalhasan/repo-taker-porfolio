@@ -8,11 +8,15 @@ import { Footer } from "@/components/web/shared/Footer";
 import { fetchGithubProjects, fetchProfileData } from "@/lib/github";
 import { Metadata } from "next";
 
-export async function generateMetadata({ params }: { params: Promise<{ domain: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ domain: string }>;
+}): Promise<Metadata> {
   const resolvedParams = await params;
   const username = resolvedParams.domain;
   const profileData = await fetchProfileData(username);
-  
+
   if (!profileData) {
     return { title: `${username} | Porto.social` };
   }
@@ -23,20 +27,24 @@ export async function generateMetadata({ params }: { params: Promise<{ domain: s
   };
 }
 
-export default async function Home({ params }: { params: Promise<{ domain: string }> }) {
+export default async function domainPage({
+  params,
+}: {
+  params: Promise<{ domain: string }>;
+}) {
   const resolvedParams = await params;
   const username = resolvedParams.domain;
   const allProjects = await fetchGithubProjects(username);
-  const projects = allProjects.filter(p => !p.isHidden);
+  const projects = allProjects.filter((p) => !p.isHidden);
   const profileData = await fetchProfileData(username);
 
   return (
     <>
       <ResponsiveNavbar profileData={profileData} />
-      
+
       <main className="flex min-h-screen flex-col w-full overflow-hidden">
         <ResponsiveHero profileData={profileData} />
-        
+
         <ServicesSection />
         <AboutSection profileData={profileData} />
         <SkillsSection />

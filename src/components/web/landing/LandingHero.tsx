@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Github, Rocket, ArrowRight } from "lucide-react";
+import { Github, Rocket, ArrowRight, LogOut } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 import Link from "next/link";
@@ -49,12 +49,28 @@ export function LandingHero() {
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6 animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300">
             {session ? (
-              <Link href="/admin">
-                <Button size="lg" className="gap-2 font-semibold shadow-lg hover:shadow-primary/25 transition-all">
-                  <Rocket className="w-5 h-5" />
-                  {isSuperAdmin ? "Go to Dashboard" : "View Portfolio"}
+              <>
+                <Link href="/admin">
+                  <Button size="lg" className="gap-2 font-semibold shadow-lg hover:shadow-primary/25 transition-all">
+                    <Rocket className="w-5 h-5" />
+                    {isSuperAdmin ? "Go to Dashboard" : "View Portfolio"}
+                  </Button>
+                </Link>
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  onClick={async () => {
+                    setIsLoading(true);
+                    await authClient.signOut();
+                    window.location.reload();
+                  }}
+                  disabled={isLoading}
+                  className="gap-2"
+                >
+                  <LogOut className="w-5 h-5" />
+                  Logout
                 </Button>
-              </Link>
+              </>
             ) : (
               <Button size="lg" onClick={handleLogin} disabled={isLoading || isPending} className="gap-2 font-semibold shadow-lg hover:shadow-primary/25 transition-all">
                 {isLoading || isPending ? <Rocket className="animate-spin w-5 h-5" /> : <Github className="w-5 h-5" />}
