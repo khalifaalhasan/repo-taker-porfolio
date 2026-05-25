@@ -27,8 +27,11 @@ export default async function AdminDashboard(props: { searchParams: Promise<{ in
   const username = dbUser.githubUsername || dbUser.name || "developer";
 
   // URL untuk melihat portofolio langsung dari dashboard
-  const isLocal = process.env.NODE_ENV !== 'production';
-  const liveUrl = isLocal ? `http://${username}.localhost:3000` : `https://${username}.porto.social`;
+  const headersList = await headers();
+  const host = headersList.get("host") || "porto.social";
+  const cleanHost = host.split(":")[0];
+  const protocol = cleanHost.includes("localhost") || cleanHost.match(/^\d+\.\d+\.\d+\.\d+$/) ? "http" : "https";
+  const liveUrl = `${protocol}://${username}.${host}`;
 
   // Cek apakah user ini adalah SUPER ADMIN (misalnya Anda sendiri)
   const isSuperAdmin = username.toLowerCase() === 'khalifaalhasan' || username.toLowerCase() === 'banggapunyaweb';

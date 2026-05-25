@@ -22,22 +22,30 @@ export default async function middleware(req: NextRequest) {
     cleanHostname === "localhost" ||
     cleanHostname === "porto.social" ||
     cleanHostname === "www.porto.social" ||
+    cleanHostname === "staging.porto.social" ||
+    cleanHostname === "testing.porto.social" ||
     !cleanHostname.includes(".") || // localhost, bare IP
     /^\d+\.\d+\.\d+\.\d+$/.test(cleanHostname);
 
-  const isPortoSubdomain = cleanHostname.endsWith(".porto.social") && !isMainDomain;
-  const isLocalSubdomain = cleanHostname.endsWith(".localhost") && !isMainDomain;
+  let baseDomain = "";
+  if (cleanHostname.endsWith(".testing.porto.social")) {
+    baseDomain = ".testing.porto.social";
+  } else if (cleanHostname.endsWith(".staging.porto.social")) {
+    baseDomain = ".staging.porto.social";
+  } else if (cleanHostname.endsWith(".porto.social")) {
+    baseDomain = ".porto.social";
+  } else if (cleanHostname.endsWith(".localhost")) {
+    baseDomain = ".localhost";
+  }
 
-
+  const isSubdomain = baseDomain !== "" && !isMainDomain;
 
   if (isMainDomain) {
     return NextResponse.next();
   }
 
   // 2. Logika Subdomain
-
-  if (isPortoSubdomain || isLocalSubdomain) {
-    const baseDomain = isPortoSubdomain ? ".porto.social" : ".localhost";
+  if (isSubdomain) {
     const username = cleanHostname.replace(baseDomain, "");
 
     // Pastikan tidak merender root jika username kosong (hanya berjaga-jaga)

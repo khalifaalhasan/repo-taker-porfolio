@@ -48,7 +48,10 @@ export default async function OnboardingPage(props: { searchParams: Promise<{ in
   const username = dbUser.githubUsername || dbUser.name || "developer";
 
   // Check if domain exists, if not create it
-  const domainHost = `${username}.porto.social`;
+  const headersList = await headers();
+  const host = headersList.get("host") || "porto.social";
+  const cleanHost = host.split(":")[0];
+  const domainHost = `${username}.${cleanHost}`;
   const existingDomain = await prisma.domain.findUnique({
     where: { hostname: domainHost }
   });

@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 const steps = [
   "Authenticating GitHub account...",
-  "Provisioning subdomain {username}.porto.social...",
+  "Provisioning subdomain {username}.{domain}...",
   "Fetching repository metadata...",
   "Optimizing device mockups...",
   "✨ Portfolio deployed successfully!"
@@ -30,11 +30,10 @@ export function DashboardTerminal({ username }: { username: string }) {
     }
   }, [currentStep]);
 
-  // URL pintar yang berfungsi di Localhost maupun Production
-  const isLocal = typeof window !== 'undefined' && window.location.hostname === 'localhost';
-  const liveUrl = isLocal 
-    ? `http://${username}.localhost:3000` 
-    : `https://${username}.porto.social`;
+  // URL pintar yang berfungsi di Localhost maupun Production (termasuk staging/testing)
+  const host = typeof window !== 'undefined' ? window.location.host : 'porto.social';
+  const protocol = typeof window !== 'undefined' ? window.location.protocol : 'https:';
+  const liveUrl = `${protocol}//${username}.${host}`;
 
   return (
     <div className="w-full max-w-2xl mx-auto rounded-xl bg-[#0d1117] border border-border shadow-2xl overflow-hidden mt-8">
@@ -50,7 +49,9 @@ export function DashboardTerminal({ username }: { username: string }) {
         <div className="space-y-4">
           {steps.slice(0, currentStep + 1).map((stepText, idx) => {
             const isLast = idx === currentStep && !isFinished;
-            const parsedText = stepText.replace("{username}", username);
+            const parsedText = stepText
+              .replace("{username}", username)
+              .replace("{domain}", typeof window !== 'undefined' ? window.location.host : 'porto.social');
             
             return (
               <div key={idx} className="flex items-start gap-3 animate-in fade-in slide-in-from-bottom-2">
