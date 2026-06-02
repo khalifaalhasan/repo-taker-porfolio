@@ -13,9 +13,9 @@
   },
   {
     "id": "3",
-    "title": "Database\nDesign",
-    "description": "Optimized relational and NoSQL schemas ensuring fast data retrieval and data integrity.",
-    "pills": ["PostgreSQL", "Performance"]
+    "title": "Fullstack\nWeb",
+    "description": "End-to-end web application development focusing on responsive UI, seamless API integration, and performance.",
+    "pills": ["React/Next.js", "End-to-End"]
   },
   {
     "id": "4",
