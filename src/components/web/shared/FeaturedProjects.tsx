@@ -42,6 +42,7 @@ export function FeaturedProjects({ projects }: { projects: Project[] }) {
                 {project.images && project.images.length > 0 && (
                   <ProjectImage 
                     src={project.images[0]} 
+                    fallbackSrc={project.images[1]}
                     alt={project.title} 
                     containerClassName="border-b border-border/50 shrink-0"
                     imageClassName="group-hover:scale-105"

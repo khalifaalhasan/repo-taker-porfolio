@@ -208,15 +208,16 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
         // Abaikan jika error / tidak ada
       }
       
-      let defaultImage = `https://opengraph.githubassets.com/1/${repo.owner.login}/${repo.name}`;
-      if (liveUrl) {
-        defaultImage = getOptimizedScreenshotUrl(liveUrl);
-      }
+      const ogImage = `https://opengraph.githubassets.com/1/${repo.owner.login}/${repo.name}`;
+      let primaryImage = ogImage;
+      
       if (customThumbnail) {
-        defaultImage = customThumbnail;
+        primaryImage = customThumbnail;
+      } else if (liveUrl) {
+        primaryImage = getOptimizedScreenshotUrl(liveUrl);
       }
 
-      const images = [defaultImage];
+      const images = primaryImage !== ogImage ? [primaryImage, ogImage] : [primaryImage];
 
       return {
         id: repo.id.toString(),

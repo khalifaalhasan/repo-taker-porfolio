@@ -72,6 +72,7 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
               {/* Featured Image */}
               <ProjectImage 
                 src={project.images[0]} 
+                fallbackSrc={project.images[1]}
                 alt={`${project.title} featured image`} 
                 containerClassName="rounded-2xl border border-border/50 shadow-lg"
               />
