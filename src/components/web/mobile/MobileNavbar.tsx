@@ -57,7 +57,18 @@ export function MobileNavbar() {
               <Link 
                 key={link.name} 
                 href={link.href}
-                onClick={() => setActiveHash(link.href)}
+                onClick={(e) => {
+                  if (window.location.pathname === "/") {
+                    e.preventDefault();
+                    const targetId = link.href.replace("/#", "");
+                    const elem = document.getElementById(targetId);
+                    if (elem) {
+                      window.scrollTo({ top: elem.offsetTop, behavior: "smooth" });
+                      window.history.pushState(null, "", link.href);
+                    }
+                  }
+                  setActiveHash(link.href);
+                }}
                 className={`relative flex flex-col items-center justify-center gap-1.5 w-14 h-14 transition-colors ${
                   isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
                 }`}
