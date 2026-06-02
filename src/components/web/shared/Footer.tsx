@@ -13,7 +13,7 @@ export function Footer({ profileData }: { profileData?: ProfileData | null }) {
         <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
           <div className="text-center md:text-left">
             <h2 className="text-2xl font-bold tracking-tight text-foreground">{name}</h2>
-            <p className="text-sm font-mono text-muted-foreground mt-1">
+            <p className="text-sm font-mono text-muted-foreground mt-2 line-clamp-2 max-w-sm">
               {headline}
             </p>
           </div>

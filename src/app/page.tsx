@@ -36,21 +36,31 @@ export default async function PortfolioPage() {
           <div className="w-12 h-12 bg-secondary text-muted-foreground rounded-lg flex items-center justify-center mb-6 border border-border">
             <Terminal size={24} />
           </div>
-          
-          <h1 className="text-2xl font-semibold mb-3 tracking-tight">Configuration Required</h1>
+
+          <h1 className="text-2xl font-semibold mb-3 tracking-tight">
+            Configuration Required
+          </h1>
           <p className="text-muted-foreground text-sm mb-8 leading-relaxed">
-            The portfolio environment has been initialized. To fetch your GitHub profile and repositories, you need to configure a Personal Access Token.
+            The portfolio environment has been initialized. To fetch your GitHub
+            profile and repositories, you need to configure a Personal Access
+            Token.
           </p>
-          
+
           <div className="space-y-6">
             <div className="flex gap-4">
               <div className="flex-shrink-0 mt-1">
                 <Settings size={20} className="text-muted-foreground" />
               </div>
               <div>
-                <h3 className="text-sm font-medium mb-1">1. Update Environment Variables</h3>
+                <h3 className="text-sm font-medium mb-1">
+                  1. Update Environment Variables
+                </h3>
                 <p className="text-sm text-muted-foreground">
-                  Open the <code className="bg-secondary px-1.5 py-0.5 rounded text-xs font-mono border border-border">.env</code> file in your project root.
+                  Open the{" "}
+                  <code className="bg-secondary px-1.5 py-0.5 rounded text-xs font-mono border border-border">
+                    .env
+                  </code>{" "}
+                  file in your project root.
                 </p>
               </div>
             </div>
@@ -60,14 +70,20 @@ export default async function PortfolioPage() {
                 <Key size={20} className="text-muted-foreground" />
               </div>
               <div>
-                <h3 className="text-sm font-medium mb-1">2. Provide Access Token</h3>
+                <h3 className="text-sm font-medium mb-1">
+                  2. Provide Access Token
+                </h3>
                 <p className="text-sm text-muted-foreground mb-2">
-                  Assign your GitHub PAT to the <code className="bg-secondary px-1.5 py-0.5 rounded text-xs font-mono border border-border">GITHUB_PAT</code> variable.
+                  Assign your GitHub PAT to the{" "}
+                  <code className="bg-secondary px-1.5 py-0.5 rounded text-xs font-mono border border-border">
+                    GITHUB_PAT
+                  </code>{" "}
+                  variable.
                 </p>
-                <a 
-                  href="https://github.com/settings/tokens" 
-                  target="_blank" 
-                  rel="noreferrer" 
+                <a
+                  href="https://github.com/settings/tokens"
+                  target="_blank"
+                  rel="noreferrer"
                   className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline font-medium"
                 >
                   Generate a token <ExternalLink size={12} />
@@ -80,7 +96,9 @@ export default async function PortfolioPage() {
                 <RefreshCw size={20} className="text-muted-foreground" />
               </div>
               <div>
-                <h3 className="text-sm font-medium mb-1">3. Refresh Application</h3>
+                <h3 className="text-sm font-medium mb-1">
+                  3. Refresh Application
+                </h3>
                 <p className="text-sm text-muted-foreground">
                   Reload this page to authenticate and compile your portfolio.
                 </p>
@@ -99,8 +117,8 @@ export default async function PortfolioPage() {
       <main className="flex min-h-screen flex-col w-full overflow-hidden">
         <ResponsiveHero profileData={profileData} />
 
-        <ServicesSection />
         <AboutSection />
+        <ServicesSection />
         <SkillsSection />
         <FeaturedProjects projects={projects} />
       </main>

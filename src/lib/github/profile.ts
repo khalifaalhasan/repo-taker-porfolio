@@ -9,8 +9,8 @@ export async function fetchProfileData(username: string = "khalifaalhasan"): Pro
     const userRes = await fetch(`https://api.github.com/users/${username}`, fetchOptions);
     const userData = userRes.ok ? await userRes.json() : {};
 
-    let headline = userData.company || "Software Engineer";
-    let bio = userData.bio || "Building the future of the web.";
+    let headline = userData.bio || "Software Engineer";
+    let bio = "";
     
     // 3. Fetch Contributions via GraphQL
     let totalContributions = 0;

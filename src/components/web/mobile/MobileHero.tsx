@@ -6,13 +6,14 @@ import { Github, Linkedin, Twitter, Instagram, Youtube, Facebook, Globe } from "
 import Link from "next/link";
 import { ProfileData } from "@/lib/github";
 import { ContributionGraph } from "@/components/web/shared/ContributionGraph";
+import aboutData from "@/data/about.json";
 
 export function MobileHero({ profileData }: { profileData: ProfileData | null }) {
   const parts = profileData?.headline?.split('·') || [];
   const mainTitle = parts.length > 0 ? parts[0].trim() : "Product Engineer";
-  const subTitle = parts.length > 1 ? parts.slice(1).join(' · ').trim() : "Backend · DevOps · SRE";
+  const subTitle = parts.length > 1 ? parts.slice(1).join(' · ').trim() : "";
   
-  const bio = profileData?.bio || "I don't just build features \u2014 I own outcomes. From schema design to shipped product, I bridge engineering and product thinking to build systems that are fast, reliable, and worth building.";
+  const bio = aboutData.bio;
   return (
     <section id="home" className="min-h-[90vh] flex flex-col items-center justify-start pt-8 pb-24 px-4 text-center">
       
