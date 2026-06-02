@@ -148,6 +148,8 @@ GITHUB_ORGS=${response.githubOrgs}
     console.log(
       `\nTo start the dev server:\n  cd ${response.projectName}\n  npm install\n  npm run dev\n`,
     );
+
+    process.exit(0);
   } catch (error: any) {
     console.error(pc.red(`\n❌ Error setting up project: ${error.message}`));
     console.error(
