@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import resumeData from "@/data/resume.json";
 
-export function ExperienceSection() {
+export function DesktopExperience() {
   return (
     <section id="experience" className="py-24 bg-background">
       <div className="max-w-4xl mx-auto px-6">
@@ -14,7 +14,7 @@ export function ExperienceSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="mb-12 md:mb-16"
+          className="mb-16"
         >
           <h2 className="text-2xl font-bold tracking-tight mb-6 uppercase text-foreground/90 border-b border-border pb-2">Work Experience</h2>
           <div className="space-y-6">
@@ -25,13 +25,13 @@ export function ExperienceSection() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
-                className="flex flex-col md:flex-row md:justify-between md:items-start gap-1"
+                className="flex flex-row justify-between items-start gap-4"
               >
                 <div>
-                  <h3 className="font-semibold text-foreground">{item.company}</h3>
+                  <h3 className="font-semibold text-foreground text-base">{item.company}</h3>
                   <p className="text-muted-foreground text-sm">{item.role}</p>
                 </div>
-                <div className="text-muted-foreground text-xs md:text-sm font-mono mt-1 md:mt-0 whitespace-nowrap">
+                <div className="text-muted-foreground text-sm font-mono whitespace-nowrap">
                   {item.date}
                 </div>
               </motion.div>
@@ -46,7 +46,7 @@ export function ExperienceSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="mb-12 md:mb-16"
+            className="mb-16"
           >
             <h2 className="text-2xl font-bold tracking-tight mb-6 uppercase text-foreground/90 border-b border-border pb-2">Leadership</h2>
             <div className="space-y-6">
@@ -57,13 +57,13 @@ export function ExperienceSection() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
-                  className="flex flex-col md:flex-row md:justify-between md:items-start gap-1"
+                  className="flex flex-row justify-between items-start gap-4"
                 >
                   <div>
-                    <h3 className="font-semibold text-foreground">{item.organization}</h3>
+                    <h3 className="font-semibold text-foreground text-base">{item.organization}</h3>
                     <p className="text-muted-foreground text-sm">{item.role}</p>
                   </div>
-                  <div className="text-muted-foreground text-xs md:text-sm font-mono mt-1 md:mt-0 whitespace-nowrap">
+                  <div className="text-muted-foreground text-sm font-mono whitespace-nowrap">
                     {item.date}
                   </div>
                 </motion.div>
@@ -88,13 +88,13 @@ export function ExperienceSection() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.1 }}
-                className="flex flex-col md:flex-row md:justify-between md:items-start gap-1"
+                className="flex flex-row justify-between items-start gap-4"
               >
                 <div className="max-w-2xl">
-                  <h3 className="font-semibold text-foreground">{item.school}</h3>
+                  <h3 className="font-semibold text-foreground text-base">{item.school}</h3>
                   <p className="text-muted-foreground text-sm">{item.degree}</p>
                 </div>
-                <div className="text-muted-foreground text-xs md:text-sm font-mono mt-1 md:mt-0 whitespace-nowrap">
+                <div className="text-muted-foreground text-sm font-mono whitespace-nowrap">
                   {item.date}
                 </div>
               </motion.div>

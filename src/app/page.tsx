@@ -4,7 +4,7 @@ import { FeaturedProjects } from "@/components/web/shared/FeaturedProjects";
 import { ServicesSection } from "@/components/web/shared/ServicesSection";
 import { SkillsSection } from "@/components/web/shared/SkillsSection";
 import { AboutSection } from "@/components/web/shared/AboutSection";
-import { ExperienceSection } from "@/components/web/shared/ExperienceSection";
+import { ResponsiveExperience } from "@/components/web/shared/ResponsiveExperience";
 import { Footer } from "@/components/web/shared/Footer";
 import { Metadata } from "next";
 import { Terminal, Key, RefreshCw, ExternalLink, Settings } from "lucide-react";
@@ -116,7 +116,7 @@ export default async function PortfolioPage() {
         <ResponsiveHero profileData={profileData} />
 
         <AboutSection />
-        <ExperienceSection />
+        <ResponsiveExperience />
         <ServicesSection />
         <SkillsSection />
         <FeaturedProjects projects={projects} />
