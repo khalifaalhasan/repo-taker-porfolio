@@ -6,7 +6,7 @@ import { ExternalLink, Github, ArrowRight, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ProjectImage } from "@/components/web/shared/ProjectImage";
-import { Project } from "@/data/projects";
+import { Project } from "@/lib/github";
 
 export function FeaturedProjects({ projects }: { projects: Project[] }) {
   const featuredProjects = projects.filter(p => p.featured).slice(0, 6);
@@ -45,6 +45,7 @@ export function FeaturedProjects({ projects }: { projects: Project[] }) {
                     alt={project.title} 
                     containerClassName="border-b border-border/50 shrink-0"
                     imageClassName="group-hover:scale-105"
+                    priority={index < 4}
                   />
                 )}
                 <div className="flex-1 p-4 md:p-6 pb-0">

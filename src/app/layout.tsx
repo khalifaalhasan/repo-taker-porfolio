@@ -3,6 +3,7 @@ import { Space_Grotesk, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/web/shared/ThemeProvider";
 import { fetchProfileData } from "@/lib/github";
+import NextTopLoader from 'nextjs-toploader';
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-sans",
@@ -29,6 +30,7 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${geistMono.variable} antialiased bg-background text-foreground bg-mesh`}
       >
+        <NextTopLoader color="hsl(var(--primary))" showSpinner={false} />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
