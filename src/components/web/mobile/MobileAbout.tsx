@@ -29,7 +29,7 @@ export function MobileAbout() {
           transition={{ duration: 0.4, delay: 0.1 }}
           className="mb-12"
         >
-          <h3 className="text-sm font-bold tracking-wider text-muted-foreground uppercase mb-4">My Approach</h3>
+          <h3 className="text-sm font-bold tracking-wider text-muted-foreground capitalize mb-4">My Approach</h3>
           <div className="flex flex-col gap-3">
             {aboutData.approaches.map((item) => (
               <div key={item.step} className="flex items-center gap-3 bg-card border border-border rounded-lg p-3">

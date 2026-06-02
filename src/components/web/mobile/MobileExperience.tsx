@@ -16,7 +16,7 @@ export function MobileExperience() {
           transition={{ duration: 0.4 }}
           className="mb-10"
         >
-          <h2 className="text-lg font-bold tracking-tight mb-4 uppercase text-foreground/90 border-b border-border pb-1.5">Work Experience</h2>
+          <h2 className="text-lg font-bold tracking-tight mb-4 capitalize text-foreground/90 border-b border-border pb-1.5">Work Experience</h2>
           <div className="space-y-5">
             {resumeData.work.map((item, index) => (
               <motion.div 
@@ -44,7 +44,7 @@ export function MobileExperience() {
             transition={{ duration: 0.4 }}
             className="mb-10"
           >
-            <h2 className="text-lg font-bold tracking-tight mb-4 uppercase text-foreground/90 border-b border-border pb-1.5">Leadership</h2>
+            <h2 className="text-lg font-bold tracking-tight mb-4 capitalize text-foreground/90 border-b border-border pb-1.5">Leadership</h2>
             <div className="space-y-5">
               {resumeData.leadership.map((item, index) => (
                 <motion.div 
@@ -71,7 +71,7 @@ export function MobileExperience() {
           viewport={{ once: true }}
           transition={{ duration: 0.4 }}
         >
-          <h2 className="text-lg font-bold tracking-tight mb-4 uppercase text-foreground/90 border-b border-border pb-1.5">Education</h2>
+          <h2 className="text-lg font-bold tracking-tight mb-4 capitalize text-foreground/90 border-b border-border pb-1.5">Education</h2>
           <div className="space-y-5">
             {resumeData.education.map((item, index) => (
               <motion.div 
