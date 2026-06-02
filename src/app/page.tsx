@@ -6,10 +6,11 @@ import { SkillsSection } from "@/components/web/shared/SkillsSection";
 import { AboutSection } from "@/components/web/shared/AboutSection";
 import { ExperienceSection } from "@/components/web/shared/ExperienceSection";
 import { Footer } from "@/components/web/shared/Footer";
-import { fetchGithubProjects, fetchProfileData } from "@/lib/github";
 import { Metadata } from "next";
 import { Terminal, Key, RefreshCw, ExternalLink, Settings } from "lucide-react";
 import heroData from "@/data/hero.json";
+import { fetchGithubProjects } from "@/lib/github/projects";
+import { fetchProfileData } from "@/lib/github/profile";
 
 export async function generateMetadata(): Promise<Metadata> {
   const username = process.env.NEXT_PUBLIC_GITHUB_USERNAME || "github";
