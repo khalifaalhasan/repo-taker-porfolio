@@ -6,14 +6,14 @@ import { Github, Linkedin, Twitter, Instagram, Youtube, Facebook, Globe } from "
 import Link from "next/link";
 import { ProfileData } from "@/lib/github";
 import { ContributionGraph } from "@/components/web/shared/ContributionGraph";
-import aboutData from "@/data/about.json";
+import heroData from "@/data/hero.json";
 
 export function MobileHero({ profileData }: { profileData: ProfileData | null }) {
   const parts = profileData?.headline?.split('·') || [];
   const mainTitle = parts.length > 0 ? parts[0].trim() : "Product Engineer";
   const subTitle = parts.length > 1 ? parts.slice(1).join(' · ').trim() : "";
   
-  const bio = aboutData.bio;
+  const bio = heroData.description;
   return (
     <section id="home" className="min-h-[90vh] flex flex-col items-center justify-start pt-8 pb-24 px-4 text-center">
       
@@ -50,9 +50,9 @@ export function MobileHero({ profileData }: { profileData: ProfileData | null })
         transition={{ duration: 0.6, delay: 0.2 }}
         className="w-full"
       >
-        <h1 className="text-4xl font-bold tracking-tighter leading-[1.05] mb-4">
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight leading-[1.2] mb-4">
           {mainTitle}<br /> 
-          <span className="text-muted-foreground text-2xl">{subTitle}</span>
+          <span className="text-muted-foreground text-xl mt-1 block">{subTitle}</span>
         </h1>
       </motion.div>
       

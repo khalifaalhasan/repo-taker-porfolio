@@ -6,14 +6,14 @@ import { Github, Linkedin, Twitter, Instagram, Youtube, Facebook, Globe } from "
 import Link from "next/link";
 import { ProfileData } from "@/lib/github";
 import { ContributionGraph } from "@/components/web/shared/ContributionGraph";
-import aboutData from "@/data/about.json";
+import heroData from "@/data/hero.json";
 
 export function DesktopHero({ profileData }: { profileData: ProfileData | null }) {
   const parts = profileData?.headline?.split('·') || [];
   const mainTitle = parts.length > 0 ? parts[0].trim() : "Product Engineer";
   const subTitle = parts.length > 1 ? parts.slice(1).join(' · ').trim() : "";
   
-  const bio = aboutData.bio;
+  const bio = heroData.description;
   return (
     <section id="home" className="min-h-screen flex items-center pt-24 pb-12 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
@@ -29,9 +29,9 @@ export function DesktopHero({ profileData }: { profileData: ProfileData | null }
             I am {profileData?.name || "Developer"}
           </span>
           
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tighter leading-[1.1] mb-6">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.2] mb-6">
             {mainTitle} <br />
-            <span className="text-muted-foreground text-3xl md:text-5xl">{subTitle}</span>
+            <span className="text-muted-foreground text-2xl md:text-3xl lg:text-4xl mt-2 block">{subTitle}</span>
           </h1>
           
           <p className="text-lg text-muted-foreground mb-10 max-w-lg leading-relaxed">
