@@ -6,6 +6,7 @@ import { ThemeToggle } from "@/components/web/shared/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { ProfileData } from "@/lib/github";
 import { motion } from "framer-motion";
+import { Terminal } from "lucide-react";
 
 const navLinks = [
   { name: "Home", href: "/#home" },
@@ -49,14 +50,13 @@ export function DesktopNavbar({ profileData }: { profileData?: ProfileData | nul
       <header className="absolute top-0 w-full z-40 pt-6 pb-4 pointer-events-none">
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between pointer-events-auto">
         {/* Logo */}
-        <Link href="/" className="flex items-center group">
-          <div className="w-10 h-10 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center font-bold text-lg font-sans transition-transform group-hover:scale-105 border border-border shadow-sm overflow-hidden">
-            {profileData?.avatarUrl ? (
-              <img src={profileData.avatarUrl} alt="Logo" className="w-full h-full object-cover" />
-            ) : (
-              "ka"
-            )}
+        <Link href="/" className="flex items-center gap-2.5 group pointer-events-auto">
+          <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center transition-transform group-hover:scale-105 border border-primary/20 shadow-sm">
+            <Terminal size={18} strokeWidth={2.5} />
           </div>
+          <span className="font-bold text-xl tracking-tight transition-colors group-hover:text-primary lowercase">
+            {process.env.NEXT_PUBLIC_GITHUB_USERNAME || "dev"}<span className="text-primary">.</span>
+          </span>
         </Link>
 
         {/* Right CTA */}

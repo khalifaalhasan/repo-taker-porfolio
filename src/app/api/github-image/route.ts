@@ -31,7 +31,16 @@ export async function GET(req: NextRequest) {
       return new NextResponse("Image not found on GitHub", { status: response.status });
     }
 
-    const contentType = response.headers.get("Content-Type") || "image/png";
+    let contentType = response.headers.get("Content-Type") || "image/png";
+    const lowerFile = file.toLowerCase();
+    if (contentType.includes("application/vnd") || contentType.includes("text/plain")) {
+      if (lowerFile.endsWith(".jpg") || lowerFile.endsWith(".jpeg")) contentType = "image/jpeg";
+      else if (lowerFile.endsWith(".png")) contentType = "image/png";
+      else if (lowerFile.endsWith(".gif")) contentType = "image/gif";
+      else if (lowerFile.endsWith(".svg")) contentType = "image/svg+xml";
+      else if (lowerFile.endsWith(".ico")) contentType = "image/x-icon";
+      else if (lowerFile.endsWith(".webp")) contentType = "image/webp";
+    }
     const arrayBuffer = await response.arrayBuffer();
 
     return new NextResponse(arrayBuffer, {

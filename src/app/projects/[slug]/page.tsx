@@ -4,6 +4,24 @@ import Link from "next/link";
 import { ProjectImage } from "@/components/web/shared/ProjectImage";
 import { ArrowLeft, ExternalLink, Github, CheckCircle2, Lock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const project = await fetchGithubProject(slug);
+  
+  if (!project) {
+    return { title: 'Project Not Found' };
+  }
+  
+  return {
+    title: project.title,
+    description: project.description || `Details about ${project.title}`,
+    openGraph: {
+      images: project.images.length > 0 ? [project.images[0]] : [],
+    }
+  };
+}
 
 export default async function ProjectDetail({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

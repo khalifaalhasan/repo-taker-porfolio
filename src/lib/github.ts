@@ -184,16 +184,20 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
       const slug = repo.name.toLowerCase();
       const liveUrl = repo.homepage && repo.homepage.trim() !== "" ? repo.homepage : null;
       
-      // Cek apakah ada file thumbnail.png atau thumbnail.jpg di repo (termasuk private repo)
+      // Cek apakah ada file thumbnail.* di repo (mendukung .png, .jpg, .ico, .svg, dll)
       let customThumbnail = null;
       try {
-        const checkPng = await fetch(`https://api.github.com/repos/${repo.owner.login}/${repo.name}/contents/thumbnail.png`, fetchOptions);
-        if (checkPng.ok) {
-          customThumbnail = `/api/github-image?repo=${repo.name}&file=thumbnail.png`;
-        } else {
-          const checkJpg = await fetch(`https://api.github.com/repos/${repo.owner.login}/${repo.name}/contents/thumbnail.jpg`, fetchOptions);
-          if (checkJpg.ok) {
-            customThumbnail = `/api/github-image?repo=${repo.name}&file=thumbnail.jpg`;
+        const rootContents = await fetch(`https://api.github.com/repos/${repo.owner.login}/${repo.name}/contents`, fetchOptions);
+        if (rootContents.ok) {
+          const files = await rootContents.json();
+          if (Array.isArray(files)) {
+            const thumbnailFile = files.find((f: any) => 
+              f.type === 'file' && 
+              f.name.toLowerCase().startsWith('thumbnail.')
+            );
+            if (thumbnailFile) {
+              customThumbnail = `/api/github-image?repo=${repo.name}&file=${thumbnailFile.name}`;
+            }
           }
         }
       } catch (e) {
