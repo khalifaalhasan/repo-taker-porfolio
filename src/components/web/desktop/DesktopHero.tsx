@@ -28,9 +28,9 @@ export function DesktopHero({ profileData }: { profileData: ProfileData | null }
             I am {profileData?.name || "Developer"}
           </span>
           
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight leading-[1.2] mb-6">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1] mb-6">
             {mainTitle} <br />
-            <span className="text-muted-foreground text-2xl md:text-3xl lg:text-4xl mt-2 block">{subTitle}</span>
+            <span className="text-muted-foreground text-3xl md:text-4xl lg:text-5xl mt-2 block">{subTitle}</span>
           </h1>
           
           <p className="text-lg text-muted-foreground mb-10 max-w-lg leading-relaxed">
