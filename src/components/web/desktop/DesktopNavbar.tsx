@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ThemeToggle } from "@/components/web/shared/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { ProfileData } from "@/lib/github";
@@ -18,9 +18,11 @@ const navLinks = [
 
 export function DesktopNavbar({ profileData }: { profileData?: ProfileData | null }) {
   const [activeHash, setActiveHash] = useState("/#home");
+  const isClickScrolling = useRef(false);
 
   useEffect(() => {
     const handleScroll = () => {
+      if (isClickScrolling.current) return;
       const sections = navLinks.map(link => link.href.substring(2));
       
       let current = sections[0];
@@ -97,7 +99,11 @@ export function DesktopNavbar({ profileData }: { profileData?: ProfileData | nul
                         window.history.pushState(null, "", link.href);
                       }
                     }
+                    isClickScrolling.current = true;
                     setActiveHash(link.href);
+                    setTimeout(() => {
+                      isClickScrolling.current = false;
+                    }, 1000);
                   }}
                   className={`relative px-5 py-2 text-sm font-medium transition-colors rounded-full ${
                     isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-secondary/30"
