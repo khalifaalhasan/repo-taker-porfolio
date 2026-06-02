@@ -62,9 +62,13 @@ export function DesktopNavbar({ profileData }: { profileData?: ProfileData | nul
         {/* Right CTA */}
         <div className="flex items-center gap-4">
           <ThemeToggle />
-          <Button variant="secondary" className="rounded-full font-medium px-6 shadow-sm hidden sm:inline-flex">
-            Let&apos;s Talk
-          </Button>
+          {profileData?.email && (
+            <a href={`mailto:${profileData.email}`}>
+              <Button variant="secondary" className="rounded-full font-medium px-6 shadow-sm hidden sm:inline-flex">
+                Let&apos;s Talk
+              </Button>
+            </a>
+          )}
         </div>
       </div>
     </header>

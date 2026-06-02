@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Github, Linkedin, Twitter, GitMerge } from "lucide-react";
+import { Github, Linkedin, Twitter, Instagram, Youtube, Facebook, Globe } from "lucide-react";
 import Link from "next/link";
 import { ProfileData } from "@/lib/github";
 import { ContributionGraph } from "@/components/web/shared/ContributionGraph";
@@ -77,15 +77,35 @@ export function MobileHero({ profileData }: { profileData: ProfileData | null })
         </Button>
         
         <div className="flex flex-col items-center gap-4 text-muted-foreground w-full mt-2">
-          <div className="flex items-center justify-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-4">
             {profileData?.socials?.website && (
               <Link href={profileData.socials.website} target="_blank" className="hover:text-foreground transition-all hover:-translate-y-1 p-3.5 rounded-full bg-secondary/30 border border-border/50">
+                <Globe className="w-5 h-5" />
+              </Link>
+            )}
+            {profileData?.socials?.linkedin && (
+              <Link href={profileData.socials.linkedin} target="_blank" className="hover:text-foreground transition-all hover:-translate-y-1 p-3.5 rounded-full bg-secondary/30 border border-border/50">
                 <Linkedin className="w-5 h-5" />
               </Link>
             )}
             {profileData?.socials?.twitter && (
               <Link href={profileData.socials.twitter} target="_blank" className="hover:text-foreground transition-colors p-3.5 rounded-full bg-secondary/30 border border-border/50">
                 <Twitter className="w-5 h-5" />
+              </Link>
+            )}
+            {profileData?.socials?.instagram && (
+              <Link href={profileData.socials.instagram} target="_blank" className="hover:text-foreground transition-colors p-3.5 rounded-full bg-secondary/30 border border-border/50">
+                <Instagram className="w-5 h-5" />
+              </Link>
+            )}
+            {profileData?.socials?.youtube && (
+              <Link href={profileData.socials.youtube} target="_blank" className="hover:text-foreground transition-colors p-3.5 rounded-full bg-secondary/30 border border-border/50">
+                <Youtube className="w-5 h-5" />
+              </Link>
+            )}
+            {profileData?.socials?.facebook && (
+              <Link href={profileData.socials.facebook} target="_blank" className="hover:text-foreground transition-colors p-3.5 rounded-full bg-secondary/30 border border-border/50">
+                <Facebook className="w-5 h-5" />
               </Link>
             )}
             <Link href={profileData?.socials?.github || "#"} target="_blank" className="hover:text-foreground transition-all hover:-translate-y-1 p-3.5 rounded-full bg-secondary/30 border border-border/50">

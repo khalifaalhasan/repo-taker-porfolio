@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Github, Linkedin, Twitter, GitMerge } from "lucide-react";
+import { Github, Linkedin, Twitter, Instagram, Youtube, Facebook, Globe } from "lucide-react";
 import Link from "next/link";
 import { ProfileData } from "@/lib/github";
 import { ContributionGraph } from "@/components/web/shared/ContributionGraph";
@@ -46,12 +46,32 @@ export function DesktopHero({ profileData }: { profileData: ProfileData | null }
               <div className="flex items-center gap-4 text-muted-foreground">
                 {profileData?.socials?.website && (
                   <Link href={profileData.socials.website} target="_blank" className="hover:text-foreground transition-colors p-2 rounded-full bg-secondary/50">
+                    <Globe className="w-5 h-5" />
+                  </Link>
+                )}
+                {profileData?.socials?.linkedin && (
+                  <Link href={profileData.socials.linkedin} target="_blank" className="hover:text-foreground transition-colors p-2 rounded-full bg-secondary/50">
                     <Linkedin className="w-5 h-5" />
                   </Link>
                 )}
                 {profileData?.socials?.twitter && (
                   <Link href={profileData.socials.twitter} target="_blank" className="hover:text-foreground transition-colors p-2 rounded-full bg-secondary/50">
                     <Twitter className="w-5 h-5" />
+                  </Link>
+                )}
+                {profileData?.socials?.instagram && (
+                  <Link href={profileData.socials.instagram} target="_blank" className="hover:text-foreground transition-colors p-2 rounded-full bg-secondary/50">
+                    <Instagram className="w-5 h-5" />
+                  </Link>
+                )}
+                {profileData?.socials?.youtube && (
+                  <Link href={profileData.socials.youtube} target="_blank" className="hover:text-foreground transition-colors p-2 rounded-full bg-secondary/50">
+                    <Youtube className="w-5 h-5" />
+                  </Link>
+                )}
+                {profileData?.socials?.facebook && (
+                  <Link href={profileData.socials.facebook} target="_blank" className="hover:text-foreground transition-colors p-2 rounded-full bg-secondary/50">
+                    <Facebook className="w-5 h-5" />
                   </Link>
                 )}
                 <Link href={profileData?.socials?.github || "#"} target="_blank" className="hover:text-foreground transition-colors p-2 rounded-full bg-secondary/50">

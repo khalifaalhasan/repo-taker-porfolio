@@ -29,11 +29,15 @@ export interface ProfileData {
   name: string;
   headline: string;
   bio: string;
-  avatarUrl?: string;
+  email?: string | null;
   socials?: {
     twitter?: string | null;
     website?: string | null;
     github?: string;
+    linkedin?: string | null;
+    instagram?: string | null;
+    youtube?: string | null;
+    facebook?: string | null;
   };
   totalContributions?: number;
   contributionWeeks?: {
@@ -367,15 +371,39 @@ export async function fetchProfileData(username: string = "khalifaalhasan"): Pro
       }
     }
 
+    // 4. Fetch Social Accounts
+    const socialRes = await fetch(`https://api.github.com/users/${username}/social_accounts`, fetchOptions);
+    const socialData = socialRes.ok ? await socialRes.json() : [];
+    
+    let linkedin = null;
+    let instagram = null;
+    let youtube = null;
+    let facebook = null;
+
+    if (Array.isArray(socialData)) {
+      for (const account of socialData) {
+        const url = account.url.toLowerCase();
+        if (url.includes('linkedin.com')) linkedin = account.url;
+        else if (url.includes('instagram.com')) instagram = account.url;
+        else if (url.includes('youtube.com')) youtube = account.url;
+        else if (url.includes('facebook.com')) facebook = account.url;
+      }
+    }
+
     return { 
       name: userData.name || username,
       headline, 
       bio,
       avatarUrl: userData.avatar_url,
+      email: userData.email || null,
       socials: {
         twitter: userData.twitter_username ? `https://twitter.com/${userData.twitter_username}` : null,
         website: userData.blog && userData.blog.trim() !== "" ? (userData.blog.startsWith('http') ? userData.blog : `https://${userData.blog}`) : null,
-        github: userData.html_url || `https://github.com/${username}`
+        github: userData.html_url || `https://github.com/${username}`,
+        linkedin,
+        instagram,
+        youtube,
+        facebook
       },
       totalContributions,
       contributionWeeks
