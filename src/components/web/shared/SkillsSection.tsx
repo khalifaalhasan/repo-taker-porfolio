@@ -17,7 +17,7 @@ export function SkillsSection() {
           className="text-center mb-16"
         >
           <SectionHeader title="Skills" />
-          <p className="text-sm font-bold tracking-wider text-muted-foreground uppercase">
+          <p className="text-xs md:text-sm font-medium text-muted-foreground capitalize">
             Crafting scalable infrastructure and clean code
           </p>
         </motion.div>

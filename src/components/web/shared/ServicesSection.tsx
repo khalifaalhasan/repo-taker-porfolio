@@ -17,7 +17,7 @@ export function ServicesSection() {
           className="text-center mb-16"
         >
           <SectionHeader title="Services" />
-          <p className="text-sm font-bold tracking-wider text-muted-foreground uppercase">
+          <p className="text-xs md:text-sm font-medium text-muted-foreground capitalize">
             Designing clean scalable resilient systems
           </p>
         </motion.div>
