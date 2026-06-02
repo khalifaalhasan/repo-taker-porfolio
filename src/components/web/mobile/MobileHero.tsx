@@ -76,7 +76,7 @@ export function MobileHero({ profileData }: { profileData: ProfileData | null })
           Download CV
         </Button>
         
-        <div className="flex flex-col items-center gap-4 text-muted-foreground w-full mt-2">
+        <div className="flex flex-col items-center gap-4 text-secondary-foreground w-full mt-2">
           <div className="flex flex-wrap items-center justify-center gap-4">
             {profileData?.socials?.linkedin && (
               <Link href={profileData.socials.linkedin} target="_blank" className="hover:text-foreground transition-all hover:-translate-y-1 p-3.5 rounded-full bg-secondary/30 border border-border/50">
