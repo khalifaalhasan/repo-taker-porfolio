@@ -1,0 +1,42 @@
+{
+  "work": [
+    {
+      "id": "1",
+      "company": "Google Developer Group on Campus: Universitas Sriwijaya",
+      "role": "Core Team Backend Dev",
+      "date": "Dec 2025 - Present"
+    },
+    {
+      "id": "2",
+      "company": "Bangga Punya Web | Software House",
+      "role": "Founder & Project Manager",
+      "date": "Nov 2025 - Present"
+    },
+    {
+      "id": "3",
+      "company": "Raden Fatah Information Technology and Database Center",
+      "role": "DevOps Engineer",
+      "date": "Aug 2025 - Present"
+    },
+    {
+      "id": "4",
+      "company": "Raden Fatah State Islamic University, Palembang",
+      "role": "Fullstack Developer",
+      "date": "June 2024 - Nov 2024"
+    }
+  ],
+  "education": [
+    {
+      "id": "1",
+      "school": "Raden Fatah State Islamic University, Palembang",
+      "degree": "Information System | Bachelor",
+      "date": "2023 - Present"
+    },
+    {
+      "id": "2",
+      "school": "State Vocational High School 11, Bogor Regency",
+      "degree": "Computer and Network Engineering",
+      "date": "2020 - 2023"
+    }
+  ]
+}
