@@ -39,8 +39,8 @@ export function DesktopHero({ profileData }: { profileData: ProfileData | null }
           
           <div className="flex flex-col gap-5">
             <div className="flex items-center gap-6">
-              <Button asChild size="lg" variant="secondary" className="rounded-full px-8 font-medium">
-                <a href="/resume/dummy.pdf" target="_blank" rel="noopener noreferrer">Download CV</a>
+              <Button size="lg" variant="secondary" className="rounded-full px-8 font-medium" onClick={() => window.open('/resume/dummy.pdf', '_blank')}>
+                Download CV
               </Button>
               
               <div className="flex items-center gap-4 text-muted-foreground">

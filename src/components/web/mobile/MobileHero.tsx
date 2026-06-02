@@ -72,8 +72,8 @@ export function MobileHero({ profileData }: { profileData: ProfileData | null })
         transition={{ duration: 0.6, delay: 0.4 }}
         className="flex flex-col items-center gap-4 w-full max-w-[260px]"
       >
-        <Button asChild size="lg" variant="secondary" className="rounded-full w-full font-bold h-12 text-sm shadow-lg shadow-background/50">
-          <a href="/resume/dummy.pdf" target="_blank" rel="noopener noreferrer">Download CV</a>
+        <Button size="lg" variant="secondary" className="rounded-full w-full font-bold h-12 text-sm shadow-lg shadow-background/50" onClick={() => window.open('/resume/dummy.pdf', '_blank')}>
+          Download CV
         </Button>
         
         <div className="flex flex-col items-center gap-4 text-muted-foreground w-full mt-2">
