@@ -44,11 +44,6 @@ export function DesktopHero({ profileData }: { profileData: ProfileData | null }
               </Button>
               
               <div className="flex items-center gap-4 text-muted-foreground">
-                {profileData?.socials?.website && (
-                  <Link href={profileData.socials.website} target="_blank" className="hover:text-foreground transition-colors p-2 rounded-full bg-secondary/50">
-                    <Globe className="w-5 h-5" />
-                  </Link>
-                )}
                 {profileData?.socials?.linkedin && (
                   <Link href={profileData.socials.linkedin} target="_blank" className="hover:text-foreground transition-colors p-2 rounded-full bg-secondary/50">
                     <Linkedin className="w-5 h-5" />
