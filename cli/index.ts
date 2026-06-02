@@ -37,9 +37,13 @@ async function main() {
       name: "theme",
       message: "Choose a default UI Theme",
       choices: [
-        { title: "Default Dark", value: "dark" },
-        { title: "Ocean Blue", value: "ocean" },
-        { title: "Forest Green", value: "forest" },
+        { title: "Default", value: "default" },
+        { title: "Twitter", value: "twitter" },
+        { title: "Candyland", value: "candyland" },
+        { title: "Claymorphism", value: "claymorshphims" },
+        { title: "Modern Minimal", value: "modernminimal" },
+        { title: "Vercel", value: "vercel" },
+        { title: "Cyberpunk", value: "cyberpunk" },
       ],
     },
   ]);
@@ -96,44 +100,14 @@ GITHUB_ORGS=${response.githubOrgs}
     const globalsCssPath = path.join(projectDir, "src/app/globals.css");
     if (fs.existsSync(globalsCssPath)) {
       let cssContent = fs.readFileSync(globalsCssPath, "utf-8");
-
-      if (response.theme === "ocean") {
-        cssContent = cssContent.replace(
-          /--background: 0 0% 100%;/g,
-          "--background: 210 50% 98%;",
-        );
-        cssContent = cssContent.replace(
-          /--background: 0 0% 3\.9%;/g,
-          "--background: 222 47% 11%;",
-        );
-        cssContent = cssContent.replace(
-          /--primary: 0 0% 9%;/g,
-          "--primary: 221 83% 53%;",
-        );
-        cssContent = cssContent.replace(
-          /--primary: 0 0% 98%;/g,
-          "--primary: 210 40% 98%;",
-        );
-      } else if (response.theme === "forest") {
-        cssContent = cssContent.replace(
-          /--background: 0 0% 100%;/g,
-          "--background: 140 30% 98%;",
-        );
-        cssContent = cssContent.replace(
-          /--background: 0 0% 3\.9%;/g,
-          "--background: 140 40% 10%;",
-        );
-        cssContent = cssContent.replace(
-          /--primary: 0 0% 9%;/g,
-          "--primary: 142 71% 45%;",
-        );
-        cssContent = cssContent.replace(
-          /--primary: 0 0% 98%;/g,
-          "--primary: 140 40% 98%;",
-        );
-      }
+      // Replace the default theme import with the selected theme
+      cssContent = cssContent.replace(
+        /@import "\.\.\/styles\/themes\/.+\.css";/g,
+        `@import "../styles/themes/${response.theme}.css";`
+      );
 
       fs.writeFileSync(globalsCssPath, cssContent);
+      console.log(pc.gray("    * Themes lovingly provided by https://tweakcn.com/"));
     }
 
     console.log(pc.green("\n🎉 All set! Your Zero-DB Portfolio is ready."));
@@ -148,6 +122,8 @@ GITHUB_ORGS=${response.githubOrgs}
     console.log(
       `\nTo start the dev server:\n  cd ${response.projectName}\n  npm install\n  npm run dev\n`,
     );
+
+    process.exit(0);
   } catch (error: any) {
     console.error(pc.red(`\n❌ Error setting up project: ${error.message}`));
     console.error(

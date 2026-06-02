@@ -2,28 +2,8 @@
 
 import { motion } from "framer-motion";
 
-const skillCategories = [
-  {
-    id: "1",
-    category: "Languages & Frameworks",
-    skills: ["Go", "Node.js", "NestJS", "Spring", "Laravel", "Python", "TypeScript", "Next.js", "React", "Tailwind"],
-  },
-  {
-    id: "2",
-    category: "Data & Brokers",
-    skills: ["PostgreSQL", "MySQL", "Redis", "SQLite", "RabbitMQ"],
-  },
-  {
-    id: "3",
-    category: "DevOps & Cloud",
-    skills: ["Docker", "Linux", "Nginx", "Nginx Proxy Manager", "Traefik", "Caddy", "GitHub Actions", "Cloudflare", "GCP", "Vercel"],
-  },
-  {
-    id: "4",
-    category: "Tools & Ecosystem",
-    skills: ["Supabase", "Firebase", "Postman", "DBeaver", "Cursor", "Claude Code", "Google Antigravity", "Notion", "ClickUp"],
-  },
-];
+import skillsData from "@/data/skills.json";
+import { SectionHeader } from "@/components/web/shared/SectionHeader";
 
 export function SkillsSection() {
   return (
@@ -36,14 +16,14 @@ export function SkillsSection() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Skills</h2>
-          <p className="text-sm font-bold tracking-wider text-muted-foreground uppercase">
+          <SectionHeader title="Skills" />
+          <p className="text-xs md:text-sm font-medium text-muted-foreground capitalize">
             Crafting scalable infrastructure and clean code
           </p>
         </motion.div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
-          {skillCategories.map((cat, index) => (
+          {skillsData.map((cat, index) => (
             <motion.div
               key={cat.id}
               initial={{ opacity: 0, y: 30 }}

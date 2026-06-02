@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ThemeToggle } from "@/components/web/shared/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { ProfileData } from "@/lib/github";
 import { motion } from "framer-motion";
+import { Terminal } from "lucide-react";
 
 const navLinks = [
   { name: "Home", href: "/#home" },
@@ -17,9 +18,11 @@ const navLinks = [
 
 export function DesktopNavbar({ profileData }: { profileData?: ProfileData | null }) {
   const [activeHash, setActiveHash] = useState("/#home");
+  const isClickScrolling = useRef(false);
 
   useEffect(() => {
     const handleScroll = () => {
+      if (isClickScrolling.current) return;
       const sections = navLinks.map(link => link.href.substring(2));
       
       let current = sections[0];
@@ -49,22 +52,25 @@ export function DesktopNavbar({ profileData }: { profileData?: ProfileData | nul
       <header className="absolute top-0 w-full z-40 pt-6 pb-4 pointer-events-none">
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between pointer-events-auto">
         {/* Logo */}
-        <Link href="/" className="flex items-center group">
-          <div className="w-10 h-10 rounded-full bg-secondary text-secondary-foreground flex items-center justify-center font-bold text-lg font-sans transition-transform group-hover:scale-105 border border-border shadow-sm overflow-hidden">
-            {profileData?.avatarUrl ? (
-              <img src={profileData.avatarUrl} alt="Logo" className="w-full h-full object-cover" />
-            ) : (
-              "ka"
-            )}
+        <Link href="/" className="flex items-center gap-2.5 group pointer-events-auto">
+          <div className="w-9 h-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center transition-transform group-hover:scale-105 border border-primary/20 shadow-sm">
+            <Terminal size={18} strokeWidth={2.5} />
           </div>
+          <span className="font-bold text-xl tracking-tight transition-colors group-hover:text-primary lowercase">
+            {process.env.NEXT_PUBLIC_GITHUB_USERNAME || "dev"}<span className="text-primary">.</span>
+          </span>
         </Link>
 
         {/* Right CTA */}
         <div className="flex items-center gap-4">
           <ThemeToggle />
-          <Button variant="secondary" className="rounded-full font-medium px-6 shadow-sm hidden sm:inline-flex">
-            Let&apos;s Talk
-          </Button>
+          {profileData?.email && (
+            <a href={`mailto:${profileData.email}`}>
+              <Button variant="secondary" className="rounded-full font-medium px-6 shadow-sm hidden sm:inline-flex">
+                Let&apos;s Talk
+              </Button>
+            </a>
+          )}
         </div>
       </div>
     </header>
@@ -83,7 +89,22 @@ export function DesktopNavbar({ profileData }: { profileData?: ProfileData | nul
                 <Link
                   key={link.name}
                   href={link.href}
-                  onClick={() => setActiveHash(link.href)}
+                  onClick={(e) => {
+                    if (window.location.pathname === "/") {
+                      e.preventDefault();
+                      const targetId = link.href.replace("/#", "");
+                      const elem = document.getElementById(targetId);
+                      if (elem) {
+                        window.scrollTo({ top: elem.offsetTop, behavior: "smooth" });
+                        window.history.pushState(null, "", link.href);
+                      }
+                    }
+                    isClickScrolling.current = true;
+                    setActiveHash(link.href);
+                    setTimeout(() => {
+                      isClickScrolling.current = false;
+                    }, 1000);
+                  }}
                   className={`relative px-5 py-2 text-sm font-medium transition-colors rounded-full ${
                     isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-secondary/30"
                   }`}

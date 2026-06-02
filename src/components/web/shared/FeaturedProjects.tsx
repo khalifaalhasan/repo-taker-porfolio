@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
+import { SectionHeader } from "@/components/web/shared/SectionHeader";
 import { ExternalLink, Github, ArrowRight, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -21,7 +22,7 @@ export function FeaturedProjects({ projects }: { projects: Project[] }) {
           transition={{ duration: 0.5 }}
           className="mb-12"
         >
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">Featured Projects</h2>
+          <SectionHeader title="Featured Projects" />
           <div className="w-20 h-1 bg-accent" />
         </motion.div>
 
@@ -42,6 +43,7 @@ export function FeaturedProjects({ projects }: { projects: Project[] }) {
                 {project.images && project.images.length > 0 && (
                   <ProjectImage 
                     src={project.images[0]} 
+                    fallbackSrc={project.images[1]}
                     alt={project.title} 
                     containerClassName="border-b border-border/50 shrink-0"
                     imageClassName="group-hover:scale-105"

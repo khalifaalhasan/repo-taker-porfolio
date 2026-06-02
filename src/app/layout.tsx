@@ -15,10 +15,19 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: "Porto.social - Zero-DB Developer Portfolios",
-  description: "Generate a stunning, edge-cached portfolio instantly from your GitHub profile. No database required. Fully automated.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const username = process.env.NEXT_PUBLIC_GITHUB_USERNAME || "github";
+  const profileData = await fetchProfileData(username);
+  const name = profileData?.name || username;
+  
+  return {
+    title: {
+      default: `${name} | Developer Portfolio`,
+      template: `%s | ${name}`,
+    },
+    description: profileData?.bio || `Developer portfolio of ${name}`,
+  };
+}
 
 export default function RootLayout({
   children,

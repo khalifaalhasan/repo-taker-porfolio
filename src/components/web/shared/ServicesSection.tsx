@@ -2,32 +2,8 @@
 
 import { motion } from "framer-motion";
 
-const services = [
-  {
-    id: "1",
-    title: "Backend\nDevelopment",
-    description: "Robust architectures using Node.js, Go, and Python for clean, consistent, reliable performance.",
-    pills: ["Clean Code", "Scalability"],
-  },
-  {
-    id: "2",
-    title: "Cloud &\nDevOps",
-    description: "Automated CI/CD pipelines and infrastructure as code using Docker, Kubernetes, and Terraform.",
-    pills: ["Automation", "High Availability"],
-  },
-  {
-    id: "3",
-    title: "Database\nDesign",
-    description: "Optimized relational and NoSQL schemas ensuring fast data retrieval and data integrity.",
-    pills: ["PostgreSQL", "Performance"],
-  },
-  {
-    id: "4",
-    title: "System\nArchitecture",
-    description: "Designing microservices and distributed systems capable of handling millions of requests seamlessly.",
-    pills: ["Microservices", "Reliability"],
-  },
-];
+import servicesData from "@/data/services.json";
+import { SectionHeader } from "@/components/web/shared/SectionHeader";
 
 export function ServicesSection() {
   return (
@@ -40,14 +16,14 @@ export function ServicesSection() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Services</h2>
-          <p className="text-sm font-bold tracking-wider text-muted-foreground uppercase">
+          <SectionHeader title="Services" />
+          <p className="text-xs md:text-sm font-medium text-muted-foreground capitalize">
             Designing clean scalable resilient systems
           </p>
         </motion.div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
-          {services.map((service, index) => (
+          {servicesData.map((service, index) => (
             <motion.div
               key={service.id}
               initial={{ opacity: 0, y: 30 }}

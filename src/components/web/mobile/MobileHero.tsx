@@ -2,17 +2,17 @@
 
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Github, Linkedin, Twitter, GitMerge } from "lucide-react";
+import { Github, Linkedin, Twitter, Instagram, Youtube, Facebook, Globe } from "lucide-react";
 import Link from "next/link";
 import { ProfileData } from "@/lib/github";
 import { ContributionGraph } from "@/components/web/shared/ContributionGraph";
+import heroData from "@/data/hero.json";
 
 export function MobileHero({ profileData }: { profileData: ProfileData | null }) {
-  const parts = profileData?.headline?.split('·') || [];
-  const mainTitle = parts.length > 0 ? parts[0].trim() : "Product Engineer";
-  const subTitle = parts.length > 1 ? parts.slice(1).join(' · ').trim() : "Backend · DevOps · SRE";
+  const mainTitle = heroData.headline;
+  const subTitle = heroData.subHeadline;
   
-  const bio = profileData?.bio || "I don't just build features \u2014 I own outcomes. From schema design to shipped product, I bridge engineering and product thinking to build systems that are fast, reliable, and worth building.";
+  const bio = heroData.description;
   return (
     <section id="home" className="min-h-[90vh] flex flex-col items-center justify-start pt-8 pb-24 px-4 text-center">
       
@@ -49,9 +49,9 @@ export function MobileHero({ profileData }: { profileData: ProfileData | null })
         transition={{ duration: 0.6, delay: 0.2 }}
         className="w-full"
       >
-        <h1 className="text-4xl font-bold tracking-tighter leading-[1.05] mb-4">
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight leading-[1.2] mb-4">
           {mainTitle}<br /> 
-          <span className="text-muted-foreground text-2xl">{subTitle}</span>
+          <span className="text-muted-foreground text-xl mt-1 block">{subTitle}</span>
         </h1>
       </motion.div>
       
@@ -72,20 +72,35 @@ export function MobileHero({ profileData }: { profileData: ProfileData | null })
         transition={{ duration: 0.6, delay: 0.4 }}
         className="flex flex-col items-center gap-4 w-full max-w-[260px]"
       >
-        <Button size="lg" variant="secondary" className="rounded-full w-full font-bold h-12 text-sm shadow-lg shadow-background/50">
+        <Button size="lg" variant="secondary" className="rounded-full w-full font-bold h-12 text-sm shadow-lg shadow-background/50" onClick={() => window.open('/resume/dummy.pdf', '_blank')}>
           Download CV
         </Button>
         
         <div className="flex flex-col items-center gap-4 text-muted-foreground w-full mt-2">
-          <div className="flex items-center justify-center gap-4">
-            {profileData?.socials?.website && (
-              <Link href={profileData.socials.website} target="_blank" className="hover:text-foreground transition-all hover:-translate-y-1 p-3.5 rounded-full bg-secondary/30 border border-border/50">
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            {profileData?.socials?.linkedin && (
+              <Link href={profileData.socials.linkedin} target="_blank" className="hover:text-foreground transition-all hover:-translate-y-1 p-3.5 rounded-full bg-secondary/30 border border-border/50">
                 <Linkedin className="w-5 h-5" />
               </Link>
             )}
             {profileData?.socials?.twitter && (
               <Link href={profileData.socials.twitter} target="_blank" className="hover:text-foreground transition-colors p-3.5 rounded-full bg-secondary/30 border border-border/50">
                 <Twitter className="w-5 h-5" />
+              </Link>
+            )}
+            {profileData?.socials?.instagram && (
+              <Link href={profileData.socials.instagram} target="_blank" className="hover:text-foreground transition-colors p-3.5 rounded-full bg-secondary/30 border border-border/50">
+                <Instagram className="w-5 h-5" />
+              </Link>
+            )}
+            {profileData?.socials?.youtube && (
+              <Link href={profileData.socials.youtube} target="_blank" className="hover:text-foreground transition-colors p-3.5 rounded-full bg-secondary/30 border border-border/50">
+                <Youtube className="w-5 h-5" />
+              </Link>
+            )}
+            {profileData?.socials?.facebook && (
+              <Link href={profileData.socials.facebook} target="_blank" className="hover:text-foreground transition-colors p-3.5 rounded-full bg-secondary/30 border border-border/50">
+                <Facebook className="w-5 h-5" />
               </Link>
             )}
             <Link href={profileData?.socials?.github || "#"} target="_blank" className="hover:text-foreground transition-all hover:-translate-y-1 p-3.5 rounded-full bg-secondary/30 border border-border/50">

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Home, Layers, User, Code, LayoutGrid } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -15,9 +15,11 @@ const navLinks = [
 
 export function MobileNavbar() {
   const [activeHash, setActiveHash] = useState("/#home");
+  const isClickScrolling = useRef(false);
 
   useEffect(() => {
     const handleScroll = () => {
+      if (isClickScrolling.current) return;
       const sections = navLinks.map(link => link.href.substring(2));
       
       let current = sections[0];
@@ -57,7 +59,22 @@ export function MobileNavbar() {
               <Link 
                 key={link.name} 
                 href={link.href}
-                onClick={() => setActiveHash(link.href)}
+                onClick={(e) => {
+                  if (window.location.pathname === "/") {
+                    e.preventDefault();
+                    const targetId = link.href.replace("/#", "");
+                    const elem = document.getElementById(targetId);
+                    if (elem) {
+                      window.scrollTo({ top: elem.offsetTop, behavior: "smooth" });
+                      window.history.pushState(null, "", link.href);
+                    }
+                  }
+                  isClickScrolling.current = true;
+                  setActiveHash(link.href);
+                  setTimeout(() => {
+                    isClickScrolling.current = false;
+                  }, 1000);
+                }}
                 className={`relative flex flex-col items-center justify-center gap-1.5 w-14 h-14 transition-colors ${
                   isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
                 }`}

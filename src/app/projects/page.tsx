@@ -35,6 +35,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
                 {project.images && project.images.length > 0 && (
                   <ProjectImage 
                     src={project.images[0]} 
+                    fallbackSrc={project.images[1]}
                     alt={project.title} 
                     priority={index < 4}
                     containerClassName="border-b border-border/50 shrink-0"
