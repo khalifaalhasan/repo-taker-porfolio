@@ -54,6 +54,17 @@
         "Optimized website performance and implemented SEO best practices to increase organic traffic and visibility.",
         "Collaborated closely with the communications team to ensure the platform met institutional branding and accessibility standards."
       ]
+    },
+    {
+      "id": "6",
+      "company": "Institute for Research and Community Service (LP2M) UIN Raden Fatah",
+      "role": "Fullstack Developer (Freelance)",
+      "date": "March 2025 - May 2025",
+      "highlights": [
+        "Engineered a comprehensive web-based platform to digitize research data and community service records for university lecturers.",
+        "Designed and implemented RESTful APIs using Go and PostgreSQL to ensure fast and secure data retrieval.",
+        "Streamlined the proposal submission and review workflow, reducing administrative processing time by 40%."
+      ]
     }
   ],
   "leadership": [
