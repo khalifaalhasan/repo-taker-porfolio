@@ -1,52 +1,6 @@
-import { getOptimizedScreenshotUrl } from "./microlink";
-
-export interface Project {
-  id: string;
-  slug: string;
-  title: string;
-  description: string;
-  challengeDescription?: string | null;
-  features?: string[] | null;
-  images: string[];
-  techStack: string[];
-  githubUrl: string | null;
-  githubFullName?: string;
-  isPrivateRepo?: boolean;
-  isHidden?: boolean;
-  liveUrl: string | null;
-  featured: boolean;
-  customTitle?: string | null;
-  customDescription?: string | null;
-}
-
-export interface ContributionDay {
-  date: string;
-  contributionCount: number;
-  contributionLevel: string;
-}
-
-export interface ProfileData {
-  name: string;
-  headline: string;
-  bio: string;
-  email?: string | null;
-  socials?: {
-    twitter?: string | null;
-    website?: string | null;
-    github?: string;
-    linkedin?: string | null;
-    instagram?: string | null;
-    youtube?: string | null;
-    facebook?: string | null;
-  };
-  totalContributions?: number;
-  contributionWeeks?: {
-    contributionDays: ContributionDay[];
-  }[];
-}
-
-const GITHUB_PAT = process.env.GITHUB_PAT;
-const GITHUB_ORGS = process.env.GITHUB_ORGS; // Contoh: "nama-org-1,nama-org-2"
+import { getOptimizedScreenshotUrl } from "../microlink";
+import { Project } from "./types";
+import { GITHUB_PAT, GITHUB_ORGS, getFetchOptions } from "./config";
 
 export async function fetchGithubProjects(username?: string): Promise<Project[]> {
   if (!GITHUB_PAT) {
@@ -55,13 +9,7 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
   }
 
   try {
-    const fetchOptions = {
-      headers: {
-        Authorization: `Bearer ${GITHUB_PAT}`,
-        Accept: "application/vnd.github.v3+json",
-      },
-      next: { revalidate: 3600 },
-    };
+    const fetchOptions = getFetchOptions();
 
     // 1. Ambil repo personal yang murni dimiliki oleh user (type=owner)
     const userReposUrl = username 
@@ -91,7 +39,7 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
       }
     }
 
-    // Filter duplikat (kalau repo org ternyata sudah ditarik oleh userReposPromise)
+    // Filter duplikat
     const uniqueReposMap = new Map();
     for (const repo of allRepos) {
       uniqueReposMap.set(repo.id, repo);
@@ -105,11 +53,7 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
         query {
           user(login: "${username}") {
             pinnedItems(first: 6, types: REPOSITORY) {
-              nodes {
-                ... on Repository {
-                  name
-                }
-              }
+              nodes { ... on Repository { name } }
             }
           }
         }
@@ -117,11 +61,7 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
         query {
           viewer {
             pinnedItems(first: 6, types: REPOSITORY) {
-              nodes {
-                ... on Repository {
-                  name
-                }
-              }
+              nodes { ... on Repository { name } }
             }
           }
         }
@@ -138,18 +78,13 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
         : graphqlData?.data?.viewer?.pinnedItems?.nodes || [];
       pinnedNodes.forEach((node: any) => pinnedRepoNames.add(node.name));
 
-      // Jika ada orgs, ambil juga pinned repos dari tiap org
       if (orgs.length > 0) {
         for (const org of orgs) {
           const orgQuery = `
             query {
               organization(login: "${org}") {
                 pinnedItems(first: 6, types: REPOSITORY) {
-                  nodes {
-                    ... on Repository {
-                      name
-                    }
-                  }
+                  nodes { ... on Repository { name } }
                 }
               }
             }
@@ -169,15 +104,11 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
       console.warn("Failed to fetch pinned repos via GraphQL", e);
     }
 
-    // Filter out forks, unless pinned. MUST have 'portfolio'/'portofolio' topic OR be pinned.
     const originalRepos = uniqueRepos.filter((repo: any) => 
       pinnedRepoNames.has(repo.name) || 
       (!repo.fork && repo.topics && (repo.topics.includes("portfolio") || repo.topics.includes("portofolio")))
     );
 
-
-
-    // Urutkan originalRepos agar yang di-pin (featured) muncul lebih dulu
     originalRepos.sort((a: any, b: any) => {
       const aPinned = pinnedRepoNames.has(a.name) ? 1 : 0;
       const bPinned = pinnedRepoNames.has(b.name) ? 1 : 0;
@@ -188,7 +119,6 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
       const slug = repo.name.toLowerCase();
       const liveUrl = repo.homepage && repo.homepage.trim() !== "" ? repo.homepage : null;
       
-      // Cek apakah ada file thumbnail.* di repo (mendukung .png, .jpg, .ico, .svg, dll)
       let customThumbnail = null;
       try {
         const rootContents = await fetch(`https://api.github.com/repos/${repo.owner.login}/${repo.name}/contents`, fetchOptions);
@@ -204,9 +134,7 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
             }
           }
         }
-      } catch (e) {
-        // Abaikan jika error / tidak ada
-      }
+      } catch (e) {}
       
       const ogImage = `https://opengraph.githubassets.com/1/${repo.owner.login}/${repo.name}`;
       let primaryImage = ogImage;
@@ -296,121 +224,4 @@ export async function fetchGithubProject(slug: string): Promise<Project | undefi
   }
 
   return enrichedProject;
-}
-
-export async function fetchProfileData(username: string = "khalifaalhasan"): Promise<ProfileData | null> {
-  try {
-    const fetchOptions = {
-      headers: {
-        Authorization: `Bearer ${GITHUB_PAT}`,
-      },
-      next: { revalidate: 3600 }
-    };
-
-    // 2. Fetch User Meta (do this first for fallbacks)
-    const userRes = await fetch(`https://api.github.com/users/${username}`, fetchOptions);
-    const userData = userRes.ok ? await userRes.json() : {};
-
-    let headline = userData.company || "Software Engineer";
-    let bio = userData.bio || "Building the future of the web.";
-    
-    // 1. Fetch README
-    const readmeRes = await fetch(`https://api.github.com/repos/${username}/${username}/readme`, {
-      ...fetchOptions,
-      headers: { ...fetchOptions.headers, Accept: "application/vnd.github.v3.raw" }
-    });
-    
-    if (readmeRes.ok) {
-      const text = await readmeRes.text();
-      // Cari headline pertama (H1, H2, atau H3)
-      const headlineMatch = text.match(/#+\s+(.+)/);
-      if (headlineMatch) headline = headlineMatch[1].trim();
-
-      // Ekstrak isi bio: dari setelah headline sampai batas horizontal rule (---) atau akhir file
-      const bioMatch = text.match(/#+\s+.*?\n([\s\S]*?)(?:---|###)/);
-      if (bioMatch && bioMatch[1].trim() !== "") {
-        bio = bioMatch[1]
-          .replace(/<br>/gi, " ")
-          .replace(/<\/?[^>]+(>|$)/g, "") // Hilangkan tag HTML
-          .trim();
-      }
-    }
-
-    // 3. Fetch Contributions via GraphQL
-    let totalContributions = 0;
-    let contributionWeeks = [];
-    if (GITHUB_PAT) {
-      const graphqlQuery = `
-        query {
-          user(login: "${username}") {
-            contributionsCollection {
-              contributionCalendar {
-                totalContributions
-                weeks {
-                  contributionDays {
-                    date
-                    contributionCount
-                    contributionLevel
-                  }
-                }
-              }
-            }
-          }
-        }
-      `;
-      const graphqlRes = await fetch("https://api.github.com/graphql", {
-        method: "POST",
-        headers: fetchOptions.headers,
-        body: JSON.stringify({ query: graphqlQuery }),
-        next: { revalidate: 3600 },
-      });
-      if (graphqlRes.ok) {
-        const graphqlData = await graphqlRes.json();
-        const calendar = graphqlData?.data?.user?.contributionsCollection?.contributionCalendar;
-        totalContributions = calendar?.totalContributions || 0;
-        contributionWeeks = calendar?.weeks || [];
-      }
-    }
-
-    // 4. Fetch Social Accounts
-    const socialRes = await fetch(`https://api.github.com/users/${username}/social_accounts`, fetchOptions);
-    const socialData = socialRes.ok ? await socialRes.json() : [];
-    
-    let linkedin = null;
-    let instagram = null;
-    let youtube = null;
-    let facebook = null;
-
-    if (Array.isArray(socialData)) {
-      for (const account of socialData) {
-        const url = account.url.toLowerCase();
-        if (url.includes('linkedin.com')) linkedin = account.url;
-        else if (url.includes('instagram.com')) instagram = account.url;
-        else if (url.includes('youtube.com')) youtube = account.url;
-        else if (url.includes('facebook.com')) facebook = account.url;
-      }
-    }
-
-    return { 
-      name: userData.name || username,
-      headline, 
-      bio,
-      avatarUrl: userData.avatar_url,
-      email: userData.email || null,
-      socials: {
-        twitter: userData.twitter_username ? `https://twitter.com/${userData.twitter_username}` : null,
-        website: userData.blog && userData.blog.trim() !== "" ? (userData.blog.startsWith('http') ? userData.blog : `https://${userData.blog}`) : null,
-        github: userData.html_url || `https://github.com/${username}`,
-        linkedin,
-        instagram,
-        youtube,
-        facebook
-      },
-      totalContributions,
-      contributionWeeks
-    };
-  } catch (e) {
-    console.error("Failed to fetch profile data:", e);
-    return null;
-  }
 }
