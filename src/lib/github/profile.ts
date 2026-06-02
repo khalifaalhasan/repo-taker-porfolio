@@ -12,26 +12,6 @@ export async function fetchProfileData(username: string = "khalifaalhasan"): Pro
     let headline = userData.company || "Software Engineer";
     let bio = userData.bio || "Building the future of the web.";
     
-    // 1. Fetch README
-    const readmeRes = await fetch(`https://api.github.com/repos/${username}/${username}/readme`, {
-      ...fetchOptions,
-      headers: { ...fetchOptions.headers, Accept: "application/vnd.github.v3.raw" }
-    });
-    
-    if (readmeRes.ok) {
-      const text = await readmeRes.text();
-      const headlineMatch = text.match(/#+\s+(.+)/);
-      if (headlineMatch) headline = headlineMatch[1].trim();
-
-      const bioMatch = text.match(/#+\s+.*?\n([\s\S]*?)(?:---|###)/);
-      if (bioMatch && bioMatch[1].trim() !== "") {
-        bio = bioMatch[1]
-          .replace(/<br>/gi, " ")
-          .replace(/<\/?[^>]+(>|$)/g, "") // Hilangkan tag HTML
-          .trim();
-      }
-    }
-
     // 3. Fetch Contributions via GraphQL
     let totalContributions = 0;
     let contributionWeeks = [];

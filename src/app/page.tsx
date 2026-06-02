@@ -100,7 +100,7 @@ export default async function PortfolioPage() {
         <ResponsiveHero profileData={profileData} />
 
         <ServicesSection />
-        <AboutSection profileData={profileData} />
+        <AboutSection />
         <SkillsSection />
         <FeaturedProjects projects={projects} />
       </main>
