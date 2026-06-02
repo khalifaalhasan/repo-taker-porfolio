@@ -8,18 +8,14 @@ import { Footer } from "@/components/web/shared/Footer";
 import { fetchGithubProjects, fetchProfileData } from "@/lib/github";
 import { Metadata } from "next";
 import { Terminal, Key, RefreshCw, ExternalLink, Settings } from "lucide-react";
+import heroData from "@/data/hero.json";
 
 export async function generateMetadata(): Promise<Metadata> {
   const username = process.env.NEXT_PUBLIC_GITHUB_USERNAME || "github";
-  const profileData = await fetchProfileData(username);
-
-  if (!profileData) {
-    return { title: `${username} | Portfolio` };
-  }
 
   return {
-    title: `${username} | ${profileData.headline}`,
-    description: profileData.bio || `Portfolio of ${username}`,
+    title: `${username} | ${heroData.headline}`,
+    description: heroData.description || `Portfolio of ${username}`,
   };
 }
 

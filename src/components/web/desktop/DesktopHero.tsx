@@ -9,9 +9,8 @@ import { ContributionGraph } from "@/components/web/shared/ContributionGraph";
 import heroData from "@/data/hero.json";
 
 export function DesktopHero({ profileData }: { profileData: ProfileData | null }) {
-  const parts = profileData?.headline?.split('·') || [];
-  const mainTitle = parts.length > 0 ? parts[0].trim() : "Product Engineer";
-  const subTitle = parts.length > 1 ? parts.slice(1).join(' · ').trim() : "";
+  const mainTitle = heroData.headline;
+  const subTitle = heroData.subHeadline;
   
   const bio = heroData.description;
   return (

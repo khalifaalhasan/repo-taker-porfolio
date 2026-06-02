@@ -2,10 +2,11 @@ import Link from "next/link";
 import { Github, Linkedin, Twitter, Instagram, Youtube, Facebook } from "lucide-react";
 
 import { ProfileData } from "@/lib/github";
+import heroData from "@/data/hero.json";
 
 export function Footer({ profileData }: { profileData?: ProfileData | null }) {
   const name = profileData?.name || process.env.NEXT_PUBLIC_GITHUB_USERNAME || "Developer";
-  const headline = profileData?.headline || "Software Engineer";
+  const headline = `${heroData.headline} · ${heroData.subHeadline}`;
 
   return (
     <footer className="bg-background border-t border-border pt-12 pb-32 md:py-12">
