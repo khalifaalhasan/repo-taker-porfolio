@@ -11,15 +11,15 @@ export function Footer({ profileData }: { profileData?: ProfileData | null }) {
   return (
     <footer className="bg-background border-t border-border pt-12 pb-32 md:py-12">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
-          <div className="text-center md:text-left">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 md:mb-8">
+          <div className="hidden md:block text-center md:text-left">
             <h2 className="text-2xl font-bold tracking-tight text-foreground">{name}</h2>
             <p className="text-sm font-mono text-muted-foreground mt-2 line-clamp-2 max-w-sm">
               {headline}
             </p>
           </div>
 
-          <nav className="flex flex-wrap justify-center gap-6 text-sm font-medium text-muted-foreground">
+          <nav className="hidden md:flex flex-wrap justify-center gap-6 text-sm font-medium text-muted-foreground">
             <Link href="/#home" className="hover:text-foreground transition-colors">Home</Link>
             <Link href="/#services" className="hover:text-foreground transition-colors">Services</Link>
             <Link href="/#about" className="hover:text-foreground transition-colors">About</Link>
