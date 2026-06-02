@@ -14,7 +14,7 @@
     {
       "id": "2",
       "company": "Raden Fatah Information Technology and Database Center",
-      "role": "Devops Engineer",
+      "role": "DevOps Engineer (Freelance)",
       "date": "Agustus 2025 - Present",
       "highlights": [
         "Modernized the software delivery lifecycle for various internal university applications by replacing manual FTP uploads with robust GitHub Actions CI/CD workflows.",
@@ -25,7 +25,7 @@
     {
       "id": "3",
       "company": "Raden Fatah Business Development Center",
-      "role": "Fullstack Engineer",
+      "role": "Fullstack Engineer (Freelance)",
       "date": "Jan 2026 - Maret 2026",
       "highlights": [
         "Engineered a full-stack \"mini-Traveloka\" booking platform to digitize and streamline asset and service reservations for the Raden Fatah Business Development Center.",
@@ -36,12 +36,23 @@
     {
       "id": "4",
       "company": "Raden Fatah",
-      "role": "Fullstack Developer",
+      "role": "Fullstack Developer (Freelance)",
       "date": "Juni 2025 - Agustus 2025",
       "highlights": [
         "Engineered multiple high-performance institutional web portals for UIN Raden Fatah, including Lembaga Pemeriksa Halal and Prodi Tasawuf & Psikoterapi, delivering responsive and SEO-optimized company profiles.",
         "Spearheaded the modernization of the LP2M website by successfully migrating the legacy CodeIgniter system to a highly scalable Next.js architecture.",
         "Standardized the UI/UX and applied clean code principles across all three platforms, significantly improving long-term maintainability and content management efficiency."
+      ]
+    },
+    {
+      "id": "5",
+      "company": "Public Relations of UIN Raden Fatah Palembang",
+      "role": "Fullstack Developer (Freelance)",
+      "date": "Jan 2025 - Mei 2025",
+      "highlights": [
+        "Developed and maintained the official Public Relations digital portal to streamline institutional information dissemination and improve public engagement.",
+        "Optimized website performance and implemented SEO best practices to increase organic traffic and visibility.",
+        "Collaborated closely with the communications team to ensure the platform met institutional branding and accessibility standards."
       ]
     }
   ],
