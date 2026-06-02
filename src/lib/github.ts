@@ -1,5 +1,23 @@
-import { Project } from "@/data/projects";
-import { getProjectMetas } from "./projectMetaStore";
+import { getOptimizedScreenshotUrl } from "./microlink";
+
+export interface Project {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  challengeDescription?: string | null;
+  features?: string[] | null;
+  images: string[];
+  techStack: string[];
+  githubUrl: string | null;
+  githubFullName?: string;
+  isPrivateRepo?: boolean;
+  isHidden?: boolean;
+  liveUrl: string | null;
+  featured: boolean;
+  customTitle?: string | null;
+  customDescription?: string | null;
+}
 
 export interface ContributionDay {
   date: string;
@@ -8,6 +26,7 @@ export interface ContributionDay {
 }
 
 export interface ProfileData {
+  name: string;
   headline: string;
   bio: string;
   avatarUrl?: string;
@@ -25,10 +44,10 @@ export interface ProfileData {
 const GITHUB_PAT = process.env.GITHUB_PAT;
 const GITHUB_ORGS = process.env.GITHUB_ORGS; // Contoh: "nama-org-1,nama-org-2"
 
-export async function fetchGithubProjects(): Promise<Project[]> {
+export async function fetchGithubProjects(username?: string): Promise<Project[]> {
   if (!GITHUB_PAT) {
-    console.warn("GITHUB_PAT is not defined in .env. Using fallback dummy data.");
-    return (await import("@/data/projects")).projectsData;
+    console.warn("GITHUB_PAT is not defined in .env. Returning empty array.");
+    return [];
   }
 
   try {
@@ -40,8 +59,12 @@ export async function fetchGithubProjects(): Promise<Project[]> {
       next: { revalidate: 3600 },
     };
 
-    // 1. Ambil repo personal yang murni dimiliki oleh user (type=owner), bukan dari semua org yang diikutinya
-    const userReposPromise = fetch("https://api.github.com/user/repos?type=owner&per_page=100&sort=pushed", fetchOptions);
+    // 1. Ambil repo personal yang murni dimiliki oleh user (type=owner)
+    const userReposUrl = username 
+      ? `https://api.github.com/users/${username}/repos?type=owner&per_page=100&sort=pushed`
+      : `https://api.github.com/user/repos?type=owner&per_page=100&sort=pushed`;
+    
+    const userReposPromise = fetch(userReposUrl, fetchOptions);
 
     // 2. Jika ada variabel GITHUB_ORGS, ambil repo spesifik dari organisasi tersebut
     const orgs = GITHUB_ORGS ? GITHUB_ORGS.split(',').map(o => o.trim()).filter(Boolean) : [];
@@ -74,7 +97,19 @@ export async function fetchGithubProjects(): Promise<Project[]> {
     // 3. Ambil daftar repo yang di-pin via GraphQL
     let pinnedRepoNames = new Set<string>();
     try {
-      const graphqlQuery = `
+      const graphqlQuery = username ? `
+        query {
+          user(login: "${username}") {
+            pinnedItems(first: 6, types: REPOSITORY) {
+              nodes {
+                ... on Repository {
+                  name
+                }
+              }
+            }
+          }
+        }
+      ` : `
         query {
           viewer {
             pinnedItems(first: 6, types: REPOSITORY) {
@@ -94,7 +129,9 @@ export async function fetchGithubProjects(): Promise<Project[]> {
         next: { revalidate: 3600 },
       });
       const graphqlData = await graphqlRes.json();
-      const pinnedNodes = graphqlData?.data?.viewer?.pinnedItems?.nodes || [];
+      const pinnedNodes = username 
+        ? graphqlData?.data?.user?.pinnedItems?.nodes || []
+        : graphqlData?.data?.viewer?.pinnedItems?.nodes || [];
       pinnedNodes.forEach((node: any) => pinnedRepoNames.add(node.name));
 
       // Jika ada orgs, ambil juga pinned repos dari tiap org
@@ -128,8 +165,11 @@ export async function fetchGithubProjects(): Promise<Project[]> {
       console.warn("Failed to fetch pinned repos via GraphQL", e);
     }
 
-    // Filter out forks to only show original work, BUT keep them if they are pinned!
-    const originalRepos = uniqueRepos.filter((repo: any) => !repo.fork || pinnedRepoNames.has(repo.name));
+    // Filter out forks, unless pinned. MUST have 'portfolio'/'portofolio' topic OR be pinned.
+    const originalRepos = uniqueRepos.filter((repo: any) => 
+      pinnedRepoNames.has(repo.name) || 
+      (!repo.fork && repo.topics && (repo.topics.includes("portfolio") || repo.topics.includes("portofolio")))
+    );
 
 
 
@@ -140,50 +180,60 @@ export async function fetchGithubProjects(): Promise<Project[]> {
       return bPinned - aPinned;
     });
 
-    const metas = await getProjectMetas();
-
-    const nameCounts = new Map<string, number>();
-    for (const repo of originalRepos) {
-      const name = repo.name.toLowerCase();
-      nameCounts.set(name, (nameCounts.get(name) || 0) + 1);
-    }
-
-    return originalRepos.map((repo: any, index: number) => {
-      const name = repo.name.toLowerCase();
-      const slug = nameCounts.get(name)! > 1 ? `${repo.owner.login.toLowerCase()}-${name}` : name;
-      const meta = metas.find((m: any) => m.slug === slug);
-
+    const enrichedRepos = await Promise.all(originalRepos.map(async (repo: any, index: number) => {
+      const slug = repo.name.toLowerCase();
       const liveUrl = repo.homepage && repo.homepage.trim() !== "" ? repo.homepage : null;
       
-      let defaultImage = `https://picsum.photos/seed/${repo.id}/800/450`;
+      // Cek apakah ada file thumbnail.png atau thumbnail.jpg di repo (termasuk private repo)
+      let customThumbnail = null;
+      try {
+        const checkPng = await fetch(`https://api.github.com/repos/${repo.owner.login}/${repo.name}/contents/thumbnail.png`, fetchOptions);
+        if (checkPng.ok) {
+          customThumbnail = `/api/github-image?repo=${repo.name}&file=thumbnail.png`;
+        } else {
+          const checkJpg = await fetch(`https://api.github.com/repos/${repo.owner.login}/${repo.name}/contents/thumbnail.jpg`, fetchOptions);
+          if (checkJpg.ok) {
+            customThumbnail = `/api/github-image?repo=${repo.name}&file=thumbnail.jpg`;
+          }
+        }
+      } catch (e) {
+        // Abaikan jika error / tidak ada
+      }
+      
+      let defaultImage = `https://opengraph.githubassets.com/1/${repo.owner.login}/${repo.name}`;
       if (liveUrl) {
-        defaultImage = `/api/screenshot?repo=${slug}&url=${encodeURIComponent(liveUrl)}`;
+        defaultImage = getOptimizedScreenshotUrl(liveUrl);
+      }
+      if (customThumbnail) {
+        defaultImage = customThumbnail;
       }
 
-      const images = meta?.images && meta.images.length > 0 ? meta.images : [defaultImage];
+      const images = [defaultImage];
 
       return {
         id: repo.id.toString(),
         slug,
-        title: meta?.customTitle || repo.name.replace(/[-_]/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
+        title: repo.name.replace(/[-_]/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
         images,
-        description: meta?.customDescription || repo.description || "No description provided.",
+        description: repo.description || "No description provided.",
         challengeDescription: null,
         features: null,
-        techStack: repo.topics && repo.topics.length > 0 ? repo.topics : [repo.language].filter(Boolean),
+        techStack: repo.topics && repo.topics.length > 0 ? repo.topics.filter((t: string) => t !== 'portfolio' && t !== 'portofolio') : [repo.language].filter(Boolean),
         githubUrl: repo.private ? null : repo.html_url,
         githubFullName: repo.full_name,
         isPrivateRepo: repo.private,
-        isHidden: meta?.isHidden || false,
-        customTitle: meta?.customTitle || null,
-        customDescription: meta?.customDescription || null,
+        isHidden: false,
+        customTitle: null,
+        customDescription: null,
         liveUrl,
         featured: pinnedRepoNames.size > 0 ? pinnedRepoNames.has(repo.name) : index < 6,
       };
-    });
+    }));
+
+    return enrichedRepos;
   } catch (error) {
     console.error("Failed to fetch GitHub projects:", error);
-    return (await import("@/data/projects")).projectsData;
+    return [];
   }
 }
 
@@ -226,7 +276,7 @@ export async function fetchGithubProject(slug: string): Promise<Project | undefi
         });
 
         for (const dep of coreDeps) {
-          if (!enrichedProject.techStack.some(t => t.toLowerCase() === dep.toLowerCase())) {
+          if (!enrichedProject.techStack.some((t: string) => t.toLowerCase() === dep.toLowerCase())) {
             enrichedProject.techStack.push(dep);
           }
         }
@@ -239,7 +289,7 @@ export async function fetchGithubProject(slug: string): Promise<Project | undefi
   return enrichedProject;
 }
 
-export async function fetchProfileData(): Promise<ProfileData | null> {
+export async function fetchProfileData(username: string = "khalifaalhasan"): Promise<ProfileData | null> {
   try {
     const fetchOptions = {
       headers: {
@@ -248,28 +298,34 @@ export async function fetchProfileData(): Promise<ProfileData | null> {
       next: { revalidate: 3600 }
     };
 
+    // 2. Fetch User Meta (do this first for fallbacks)
+    const userRes = await fetch(`https://api.github.com/users/${username}`, fetchOptions);
+    const userData = userRes.ok ? await userRes.json() : {};
+
+    let headline = userData.company || "Software Engineer";
+    let bio = userData.bio || "Building the future of the web.";
+    
     // 1. Fetch README
-    const readmeRes = await fetch("https://raw.githubusercontent.com/khalifaalhasan/khalifaalhasan/main/README.md", fetchOptions);
-    let headline = "Product Engineer";
-    let bio = "I don't just build features \u2014 I own outcomes.";
+    const readmeRes = await fetch(`https://api.github.com/repos/${username}/${username}/readme`, {
+      ...fetchOptions,
+      headers: { ...fetchOptions.headers, Accept: "application/vnd.github.v3.raw" }
+    });
     
     if (readmeRes.ok) {
       const text = await readmeRes.text();
-      const headlineMatch = text.match(/##\s+(.+)/);
+      // Cari headline pertama (H1, H2, atau H3)
+      const headlineMatch = text.match(/#+\s+(.+)/);
       if (headlineMatch) headline = headlineMatch[1].trim();
 
-      const bioMatch = text.match(/##\s+.*?\n([\s\S]*?)---/);
-      if (bioMatch) {
+      // Ekstrak isi bio: dari setelah headline sampai batas horizontal rule (---) atau akhir file
+      const bioMatch = text.match(/#+\s+.*?\n([\s\S]*?)(?:---|###)/);
+      if (bioMatch && bioMatch[1].trim() !== "") {
         bio = bioMatch[1]
           .replace(/<br>/gi, " ")
-          .replace(/<\/?[^>]+(>|$)/g, "")
+          .replace(/<\/?[^>]+(>|$)/g, "") // Hilangkan tag HTML
           .trim();
       }
     }
-
-    // 2. Fetch User Meta
-    const userRes = await fetch("https://api.github.com/users/khalifaalhasan", fetchOptions);
-    const userData = userRes.ok ? await userRes.json() : {};
 
     // 3. Fetch Contributions via GraphQL
     let totalContributions = 0;
@@ -277,7 +333,7 @@ export async function fetchProfileData(): Promise<ProfileData | null> {
     if (GITHUB_PAT) {
       const graphqlQuery = `
         query {
-          user(login: "khalifaalhasan") {
+          user(login: "${username}") {
             contributionsCollection {
               contributionCalendar {
                 totalContributions
@@ -308,13 +364,14 @@ export async function fetchProfileData(): Promise<ProfileData | null> {
     }
 
     return { 
+      name: userData.name || username,
       headline, 
       bio,
       avatarUrl: userData.avatar_url,
       socials: {
         twitter: userData.twitter_username ? `https://twitter.com/${userData.twitter_username}` : null,
         website: userData.blog && userData.blog.trim() !== "" ? (userData.blog.startsWith('http') ? userData.blog : `https://${userData.blog}`) : null,
-        github: userData.html_url || "https://github.com/khalifaalhasan"
+        github: userData.html_url || `https://github.com/${username}`
       },
       totalContributions,
       contributionWeeks

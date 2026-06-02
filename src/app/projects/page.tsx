@@ -29,13 +29,14 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
         <div className="w-20 h-1 bg-accent mb-12" />
 
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-8">
-          {currentProjects.map((project) => (
+          {currentProjects.map((project, index) => (
             <Link key={project.id} href={`/projects/${project.slug}`} className="group flex flex-col justify-between rounded-xl md:rounded-2xl bg-card border border-border transition-all hover:-translate-y-1 hover:shadow-lg hover:border-accent/50 overflow-hidden">
               <div className="flex flex-col h-full">
                 {project.images && project.images.length > 0 && (
                   <ProjectImage 
                     src={project.images[0]} 
                     alt={project.title} 
+                    priority={index < 4}
                     containerClassName="border-b border-border/50 shrink-0"
                     imageClassName="group-hover:scale-105"
                   />

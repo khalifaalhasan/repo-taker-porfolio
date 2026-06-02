@@ -2,23 +2,22 @@
 
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import Image from "next/image";
 
 interface ProjectImageProps {
   src: string;
   alt: string;
   containerClassName?: string;
   imageClassName?: string;
+  priority?: boolean;
 }
 
-export function ProjectImage({ src, alt, containerClassName = "", imageClassName = "" }: ProjectImageProps) {
+export function ProjectImage({ src, alt, containerClassName = "", imageClassName = "", priority = false }: ProjectImageProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
     <div 
-      className={`relative w-full overflow-hidden bg-secondary/30 ${
-        // On mobile: fixed 16:9 ratio. On desktop: auto height (min height while loading)
-        "aspect-video md:aspect-auto md:min-h-[250px]"
-      } ${containerClassName}`}
+      className={`relative w-full overflow-hidden bg-secondary/30 aspect-[1200/630] ${containerClassName}`}
     >
       {isLoading && (
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/50 backdrop-blur-sm">
@@ -26,15 +25,15 @@ export function ProjectImage({ src, alt, containerClassName = "", imageClassName
         </div>
       )}
       
-      <img
+      <Image
         src={src}
         alt={alt}
+        width={1200}
+        height={630}
+        priority={priority}
+        unoptimized={true}
         onLoad={() => setIsLoading(false)}
-        className={`w-full transition-all duration-700 ${
-          // On mobile: object-cover (fills the 16:9 container, might crop). 
-          // On desktop: h-auto (preserves original aspect ratio perfectly, no crop).
-          "h-full object-cover md:h-auto"
-        } ${isLoading ? 'opacity-0 scale-105' : 'opacity-100 scale-100'} ${imageClassName}`}
+        className={`w-full h-full object-cover transition-all duration-700 ${isLoading ? 'opacity-0 scale-105' : 'opacity-100 scale-100'} ${imageClassName}`}
       />
     </div>
   );

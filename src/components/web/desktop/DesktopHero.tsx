@@ -25,7 +25,7 @@ export function DesktopHero({ profileData }: { profileData: ProfileData | null }
           className="flex flex-col items-start max-w-2xl relative z-20"
         >
           <span className="text-muted-foreground font-medium mb-4 tracking-wide">
-            I am Khalifa Alhasan
+            I am {profileData?.name || "Developer"}
           </span>
           
           <h1 className="text-4xl md:text-6xl font-bold tracking-tighter leading-[1.1] mb-6">
@@ -54,7 +54,7 @@ export function DesktopHero({ profileData }: { profileData: ProfileData | null }
                     <Twitter className="w-5 h-5" />
                   </Link>
                 )}
-                <Link href={profileData?.socials?.github || "https://github.com/khalifaalhasan"} target="_blank" className="hover:text-foreground transition-colors p-2 rounded-full bg-secondary/50">
+                <Link href={profileData?.socials?.github || "#"} target="_blank" className="hover:text-foreground transition-colors p-2 rounded-full bg-secondary/50">
                   <Github className="w-5 h-5" />
                 </Link>
               </div>

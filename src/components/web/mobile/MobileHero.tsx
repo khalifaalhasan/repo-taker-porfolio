@@ -38,7 +38,7 @@ export function MobileHero({ profileData }: { profileData: ProfileData | null })
         transition={{ duration: 0.5, delay: 0.1 }}
       >
         <span className="inline-flex items-center rounded-full px-4 py-1.5 text-xs font-semibold bg-secondary/80 text-secondary-foreground mb-6 border border-border/50">
-          👋 I am Khalifa Alhasan
+          👋 I am {profileData?.name || "Developer"}
         </span>
       </motion.div>
       
@@ -88,7 +88,7 @@ export function MobileHero({ profileData }: { profileData: ProfileData | null })
                 <Twitter className="w-5 h-5" />
               </Link>
             )}
-            <Link href={profileData?.socials?.github || "https://github.com/khalifaalhasan"} target="_blank" className="hover:text-foreground transition-all hover:-translate-y-1 p-3.5 rounded-full bg-secondary/30 border border-border/50">
+            <Link href={profileData?.socials?.github || "#"} target="_blank" className="hover:text-foreground transition-all hover:-translate-y-1 p-3.5 rounded-full bg-secondary/30 border border-border/50">
               <Github className="w-5 h-5" />
             </Link>
           </div>
