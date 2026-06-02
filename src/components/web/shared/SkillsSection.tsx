@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 
 import skillsData from "@/data/skills.json";
+import { SectionHeader } from "@/components/web/shared/SectionHeader";
 
 export function SkillsSection() {
   return (
@@ -15,7 +16,7 @@ export function SkillsSection() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Skills</h2>
+          <SectionHeader title="Skills" />
           <p className="text-sm font-bold tracking-wider text-muted-foreground uppercase">
             Crafting scalable infrastructure and clean code
           </p>

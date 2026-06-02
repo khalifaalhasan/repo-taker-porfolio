@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 
 import servicesData from "@/data/services.json";
+import { SectionHeader } from "@/components/web/shared/SectionHeader";
 
 export function ServicesSection() {
   return (
@@ -15,7 +16,7 @@ export function ServicesSection() {
           transition={{ duration: 0.5 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">Services</h2>
+          <SectionHeader title="Services" />
           <p className="text-sm font-bold tracking-wider text-muted-foreground uppercase">
             Designing clean scalable resilient systems
           </p>
