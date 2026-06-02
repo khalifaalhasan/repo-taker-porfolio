@@ -1,14 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-
 import aboutData from "@/data/about.json";
 
-export function AboutSection() {
+export function DesktopAbout() {
   const bio = aboutData.bio;
   return (
     <section id="about" className="py-24 bg-background">
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
+      <div className="max-w-7xl mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -16,8 +15,8 @@ export function AboutSection() {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">About Me</h2>
-          <p className="text-muted-foreground text-base md:text-lg leading-relaxed max-w-4xl mx-auto whitespace-pre-wrap">
+          <h2 className="text-4xl lg:text-5xl font-bold tracking-tight mb-6">About Me</h2>
+          <p className="text-muted-foreground text-lg leading-relaxed max-w-4xl mx-auto whitespace-pre-wrap">
             {bio}
           </p>
         </motion.div>
@@ -31,13 +30,13 @@ export function AboutSection() {
           className="mb-20"
         >
           <h3 className="text-xl font-bold text-center mb-6">My Approach</h3>
-          <div className="grid grid-cols-3 gap-2 md:gap-4">
+          <div className="grid grid-cols-3 gap-4">
             {aboutData.approaches.map((item) => (
-              <div key={item.step} className="flex flex-col md:flex-row items-center md:items-start gap-2 md:gap-4 bg-card border border-border rounded-lg md:rounded-xl p-2 md:p-4 text-center md:text-left">
-                <div className="w-6 h-6 md:w-10 md:h-10 shrink-0 rounded md:rounded-lg bg-secondary text-secondary-foreground font-bold flex items-center justify-center text-[10px] md:text-sm">
+              <div key={item.step} className="flex flex-row items-start gap-4 bg-card border border-border rounded-xl p-4 text-left">
+                <div className="w-10 h-10 shrink-0 rounded-lg bg-secondary text-secondary-foreground font-bold flex items-center justify-center text-sm">
                   {item.step}
                 </div>
-                <span className="text-muted-foreground text-[8px] md:text-sm font-medium leading-tight md:leading-normal">{item.title}</span>
+                <span className="text-muted-foreground text-sm font-medium leading-normal">{item.title}</span>
               </div>
             ))}
           </div>
@@ -49,11 +48,11 @@ export function AboutSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="flex flex-wrap justify-center gap-12 md:gap-24"
+          className="flex flex-wrap justify-center gap-24"
         >
           {aboutData.stats.map((stat) => (
             <div key={stat.label} className="text-center">
-              <h4 className="text-4xl md:text-5xl font-bold mb-2">{stat.value}</h4>
+              <h4 className="text-5xl font-bold mb-2">{stat.value}</h4>
               <p className="text-sm font-medium text-muted-foreground tracking-wide">{stat.label}</p>
             </div>
           ))}
