@@ -42,7 +42,7 @@ export function ServicesSection() {
               </div>
               <div className="flex flex-col gap-2 md:gap-3">
                 {service.pills.map((pill) => (
-                  <div key={pill} className="px-2 md:px-4 py-1.5 md:py-2.5 rounded-lg md:rounded-xl border border-border bg-secondary/50 text-[9px] md:text-xs font-medium text-muted-foreground text-center md:text-left truncate">
+                  <div key={pill} className="px-2 md:px-4 py-1.5 md:py-2.5 rounded-lg md:rounded-xl border border-border bg-secondary/50 text-[9px] md:text-xs font-medium text-secondary-foreground text-center md:text-left truncate">
                     {pill}
                   </div>
                 ))}

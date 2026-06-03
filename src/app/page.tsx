@@ -112,7 +112,11 @@ export default async function PortfolioPage() {
     <>
       <ResponsiveNavbar profileData={profileData} />
 
-      <main className="flex min-h-screen flex-col w-full overflow-hidden">
+      <main className="flex min-h-screen flex-col w-full overflow-hidden relative">
+        {/* Dynamic Ambient Background Gradients */}
+        <div className="pointer-events-none absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-primary/20 blur-[120px] -z-10 mix-blend-screen" />
+        <div className="pointer-events-none absolute top-[10%] -right-[10%] w-[40%] h-[60%] rounded-full bg-accent/20 blur-[120px] -z-10 mix-blend-screen" />
+
         <ResponsiveHero profileData={profileData} />
 
         <ResponsiveAbout />

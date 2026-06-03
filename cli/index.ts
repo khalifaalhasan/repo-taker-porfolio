@@ -9,7 +9,7 @@ import pc from "picocolors";
 const TEMPLATE_REPO = "khalifaalhasan/repo-taker-porfolio"; // This is your repo!
 
 async function main() {
-  console.log(pc.cyan("✨ Welcome to the Zero-DB Portfolio CLI! ✨\n"));
+  console.log(pc.cyan("Zero-DB Portfolio CLI\n=========================\n"));
 
   const response = await prompts([
     {
@@ -37,13 +37,13 @@ async function main() {
       name: "theme",
       message: "Choose a default UI Theme",
       choices: [
-        { title: "Default", value: "default" },
-        { title: "Twitter", value: "twitter" },
-        { title: "Candyland", value: "candyland" },
-        { title: "Claymorphism", value: "claymorshphims" },
-        { title: "Modern Minimal", value: "modernminimal" },
-        { title: "Vercel", value: "vercel" },
-        { title: "Cyberpunk", value: "cyberpunk" },
+        { title: pc.white("Default"), value: "default" },
+        { title: pc.blue("Twitter"), value: "twitter" },
+        { title: pc.magenta("Candyland"), value: "candyland" },
+        { title: pc.green("Claymorphism"), value: "claymorshphims" },
+        { title: pc.gray("Modern Minimal"), value: "modernminimal" },
+        { title: pc.bold(pc.white("Vercel")), value: "vercel" },
+        { title: pc.yellow("Cyberpunk"), value: "cyberpunk" },
       ],
     },
   ]);
@@ -57,7 +57,7 @@ async function main() {
 
   console.log(
     pc.blue(
-      `\n📥 Downloading template from ${TEMPLATE_REPO} into ${response.projectName}...`,
+      `\nDownloading template from ${TEMPLATE_REPO} into ${response.projectName}...`,
     ),
   );
 
@@ -70,10 +70,10 @@ async function main() {
 
     await emitter.clone(projectDir);
 
-    console.log(pc.green("✅ Template downloaded successfully!\n"));
+    console.log(pc.green("Template downloaded successfully.\n"));
 
     // 1. Write the .env file
-    console.log(pc.blue("⚙️  Configuring environment variables..."));
+    console.log(pc.blue("Configuring environment variables..."));
     const envContent = `NEXT_PUBLIC_GITHUB_USERNAME=${response.githubUsername}
 
 # ==============================================================================
@@ -96,7 +96,7 @@ GITHUB_ORGS=${response.githubOrgs}
     fs.writeFileSync(path.join(projectDir, ".env"), envContent);
 
     // 2. Inject Theme into globals.css (Simple substitution for demo purposes)
-    console.log(pc.blue(`🎨 Applying ${response.theme} theme...`));
+    console.log(pc.blue(`Applying ${response.theme} theme...`));
     const globalsCssPath = path.join(projectDir, "src/app/globals.css");
     if (fs.existsSync(globalsCssPath)) {
       let cssContent = fs.readFileSync(globalsCssPath, "utf-8");
@@ -107,11 +107,11 @@ GITHUB_ORGS=${response.githubOrgs}
       );
 
       fs.writeFileSync(globalsCssPath, cssContent);
-      console.log(pc.gray("    * Themes lovingly provided by https://tweakcn.com/"));
+      console.log(pc.gray("    - Themes provided by https://tweakcn.com/"));
     }
 
-    console.log(pc.green("\n🎉 All set! Your Zero-DB Portfolio is ready."));
-    console.log(pc.yellow("\n⚠️  IMPORTANT NEXT STEP:"));
+    console.log(pc.green("\nAll set! Your Zero-DB Portfolio is ready."));
+    console.log(pc.yellow("\nIMPORTANT NEXT STEP:"));
     console.log(
       pc.white(`Open the `) + pc.cyan(`${response.projectName}/.env`) + pc.white(` file and add your GitHub PAT:\n`) +
       pc.gray("  1. Go to https://github.com/settings/tokens\n") +
@@ -125,7 +125,7 @@ GITHUB_ORGS=${response.githubOrgs}
 
     process.exit(0);
   } catch (error: any) {
-    console.error(pc.red(`\n❌ Error setting up project: ${error.message}`));
+    console.error(pc.red(`\nError setting up project: ${error.message}`));
     console.error(
       pc.gray(
         "Make sure your template repository is public or you have the correct Git permissions.",

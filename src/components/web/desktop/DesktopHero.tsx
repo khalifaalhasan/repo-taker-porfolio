@@ -43,7 +43,7 @@ export function DesktopHero({ profileData }: { profileData: ProfileData | null }
                 Download CV
               </Button>
               
-              <div className="flex items-center gap-4 text-muted-foreground">
+              <div className="flex items-center gap-4 text-secondary-foreground">
                 {profileData?.socials?.linkedin && (
                   <Link href={profileData.socials.linkedin} target="_blank" className="hover:text-foreground transition-colors p-2 rounded-full bg-secondary/50">
                     <Linkedin className="w-5 h-5" />
