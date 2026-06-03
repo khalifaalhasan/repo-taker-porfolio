@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import prompts from "prompts";
+import * as p from "@clack/prompts";
 import degit from "degit";
 import path from "path";
 import fs from "fs";
@@ -9,72 +9,74 @@ import pc from "picocolors";
 const TEMPLATE_REPO = "khalifaalhasan/repo-taker-porfolio"; // This is your repo!
 
 async function main() {
-  console.log(pc.cyan("Zero-DB Portfolio CLI\n=========================\n"));
+  p.intro(pc.cyan(pc.bold(" Zero-DB Portfolio CLI ")));
 
-  const response = await prompts([
+  const project = await p.group(
     {
-      type: "text",
-      name: "projectName",
-      message: "What is your project named?",
-      initial: "my-portfolio",
+      projectName: () =>
+        p.text({
+          message: "What is your project named?",
+          placeholder: "my-portfolio",
+          defaultValue: "my-portfolio",
+          validate: (value) => {
+            if (!value) return "Please enter a project name.";
+          },
+        }),
+      githubUsername: () =>
+        p.text({
+          message: "What is your GitHub Username?",
+          placeholder: "khalifaalhasan",
+          validate: (value) => {
+            if (!value) return "Username is required!";
+          },
+        }),
+      githubOrgs: () =>
+        p.text({
+          message:
+            "Fetch repos from any specific GitHub Organizations? (comma-separated, leave blank for none)",
+          defaultValue: "",
+        }),
+      theme: () =>
+        p.select({
+          message: "Choose a default UI Theme",
+          options: [
+            { label: pc.white("Default"), value: "default" },
+            { label: pc.blue("Twitter"), value: "twitter" },
+            { label: pc.magenta("Candyland"), value: "candyland" },
+            { label: pc.green("Claymorphism"), value: "claymorshphims" },
+            { label: pc.gray("Modern Minimal"), value: "modernminimal" },
+            { label: pc.bold(pc.white("Vercel")), value: "vercel" },
+            { label: pc.yellow("Cyberpunk"), value: "cyberpunk" },
+          ],
+        }),
     },
     {
-      type: "text",
-      name: "githubUsername",
-      message: "What is your GitHub Username?",
-      validate: (value) => (value.length > 0 ? true : "Username is required!"),
-    },
-
-    {
-      type: "text",
-      name: "githubOrgs",
-      message:
-        "Do you want to fetch repos from any specific GitHub Organizations? (comma-separated, leave blank for none)",
-      initial: "",
-    },
-    {
-      type: "select",
-      name: "theme",
-      message: "Choose a default UI Theme",
-      choices: [
-        { title: pc.white("Default"), value: "default" },
-        { title: pc.blue("Twitter"), value: "twitter" },
-        { title: pc.magenta("Candyland"), value: "candyland" },
-        { title: pc.green("Claymorphism"), value: "claymorshphims" },
-        { title: pc.gray("Modern Minimal"), value: "modernminimal" },
-        { title: pc.bold(pc.white("Vercel")), value: "vercel" },
-        { title: pc.yellow("Cyberpunk"), value: "cyberpunk" },
-      ],
-    },
-  ]);
-
-  if (!response.projectName) {
-    console.log(pc.red("Setup cancelled."));
-    process.exit(1);
-  }
-
-  const projectDir = path.resolve(process.cwd(), response.projectName);
-
-  console.log(
-    pc.blue(
-      `\nDownloading template from ${TEMPLATE_REPO} into ${response.projectName}...`,
-    ),
+      onCancel: () => {
+        p.cancel("Setup cancelled.");
+        process.exit(1);
+      },
+    }
   );
+
+  const projectDir = path.resolve(process.cwd(), project.projectName);
+
+  const s = p.spinner();
+  s.start(`Downloading template from ${TEMPLATE_REPO}...`);
 
   try {
     const emitter = degit(TEMPLATE_REPO, {
       cache: false,
       force: true,
-      verbose: true,
+      verbose: false,
     });
 
     await emitter.clone(projectDir);
 
-    console.log(pc.green("Template downloaded successfully.\n"));
+    s.stop("Template downloaded successfully.");
 
     // 1. Write the .env file
-    console.log(pc.blue("Configuring environment variables..."));
-    const envContent = `NEXT_PUBLIC_GITHUB_USERNAME=${response.githubUsername}
+    p.log.step("Configuring environment variables...");
+    const envContent = `NEXT_PUBLIC_GITHUB_USERNAME=${project.githubUsername}
 
 # ==============================================================================
 # GITHUB PERSONAL ACCESS TOKEN (PAT)
@@ -91,45 +93,47 @@ async function main() {
 # ==============================================================================
 GITHUB_PAT=""
 
-GITHUB_ORGS=${response.githubOrgs}
+GITHUB_ORGS=${project.githubOrgs}
 `;
     fs.writeFileSync(path.join(projectDir, ".env"), envContent);
 
-    // 2. Inject Theme into globals.css (Simple substitution for demo purposes)
-    console.log(pc.blue(`Applying ${response.theme} theme...`));
+    // 2. Inject Theme into globals.css
+    p.log.step(`Applying ${project.theme} theme...`);
     const globalsCssPath = path.join(projectDir, "src/app/globals.css");
     if (fs.existsSync(globalsCssPath)) {
       let cssContent = fs.readFileSync(globalsCssPath, "utf-8");
       // Replace the default theme import with the selected theme
       cssContent = cssContent.replace(
         /@import "\.\.\/styles\/themes\/.+\.css";/g,
-        `@import "../styles/themes/${response.theme}.css";`
+        `@import "../styles/themes/${project.theme}.css";`
       );
 
       fs.writeFileSync(globalsCssPath, cssContent);
-      console.log(pc.gray("    - Themes provided by https://tweakcn.com/"));
+      p.log.message(pc.gray("Themes lovingly provided by https://tweakcn.com/"));
     }
 
-    console.log(pc.green("\nAll set! Your Zero-DB Portfolio is ready."));
-    console.log(pc.yellow("\nIMPORTANT NEXT STEP:"));
-    console.log(
-      pc.white(`Open the `) + pc.cyan(`${response.projectName}/.env`) + pc.white(` file and add your GitHub PAT:\n`) +
-      pc.gray("  1. Go to https://github.com/settings/tokens\n") +
-      pc.gray("  2. Generate a new classic token with 'repo' and 'read:user' scopes\n") +
-      pc.gray("  3. Set GITHUB_PAT=\"ghp_your_token\" inside the .env file")
+    p.note(
+      `Open the ${pc.cyan(`${project.projectName}/.env`)} file and add your GitHub PAT:\n\n` +
+      pc.gray("1. Go to https://github.com/settings/tokens\n") +
+      pc.gray("2. Generate a new classic token with 'repo' and 'read:user' scopes\n") +
+      pc.gray(`3. Set ${pc.white('GITHUB_PAT="ghp_your_token"')} inside the .env file`),
+      "IMPORTANT NEXT STEP"
     );
-    
-    console.log(
-      `\nTo start the dev server:\n  cd ${response.projectName}\n  npm install\n  npm run dev\n`,
+
+    p.outro(
+      `Your Zero-DB Portfolio is ready!\n\n` +
+      `Run the following commands to start:\n` +
+      pc.cyan(`  cd ${project.projectName}\n`) +
+      pc.cyan(`  npm install\n`) +
+      pc.cyan(`  npm run dev`)
     );
 
     process.exit(0);
   } catch (error: any) {
-    console.error(pc.red(`\nError setting up project: ${error.message}`));
-    console.error(
-      pc.gray(
-        "Make sure your template repository is public or you have the correct Git permissions.",
-      ),
+    s.stop("Failed to download template.");
+    p.log.error(`Error setting up project: ${error.message}`);
+    p.cancel(
+      "Make sure your template repository is public or you have the correct Git permissions."
     );
     process.exit(1);
   }
