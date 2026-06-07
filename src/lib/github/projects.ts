@@ -284,11 +284,13 @@ export async function fetchGithubProject(slug: string): Promise<Project | undefi
       if (contribRes.ok) {
         const contributorsData = await contribRes.json();
         if (Array.isArray(contributorsData)) {
-          enrichedProject.contributors = contributorsData.map((c: any) => ({
-            login: c.login,
-            avatar_url: c.avatar_url,
-            html_url: c.html_url
-          }));
+          enrichedProject.contributors = contributorsData
+            .filter((c: any) => c.type !== 'Bot' && !c.login.toLowerCase().includes('[bot]'))
+            .map((c: any) => ({
+              login: c.login,
+              avatar_url: c.avatar_url,
+              html_url: c.html_url
+            }));
         }
       }
     } catch (e) {
