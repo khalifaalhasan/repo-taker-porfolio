@@ -110,6 +110,10 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
     );
 
     originalRepos.sort((a: any, b: any) => {
+      const aFeatured = a.topics?.includes("featured") ? 1 : 0;
+      const bFeatured = b.topics?.includes("featured") ? 1 : 0;
+      if (aFeatured !== bFeatured) return bFeatured - aFeatured;
+
       const aPinned = pinnedRepoNames.has(a.name) ? 1 : 0;
       const bPinned = pinnedRepoNames.has(b.name) ? 1 : 0;
       return bPinned - aPinned;
@@ -156,7 +160,7 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
         description: repo.description || "No description provided.",
         challengeDescription: null,
         features: null,
-        techStack: repo.topics && repo.topics.length > 0 ? repo.topics.filter((t: string) => t !== 'portfolio' && t !== 'portofolio') : [repo.language].filter(Boolean),
+        techStack: repo.topics && repo.topics.length > 0 ? repo.topics.filter((t: string) => t !== 'portfolio' && t !== 'portofolio' && t !== 'featured') : [repo.language].filter(Boolean),
         githubUrl: repo.private ? null : repo.html_url,
         githubFullName: repo.full_name,
         isPrivateRepo: repo.private,
@@ -164,7 +168,7 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
         customTitle: null,
         customDescription: null,
         liveUrl,
-        featured: pinnedRepoNames.size > 0 ? pinnedRepoNames.has(repo.name) : index < 6,
+        featured: repo.topics?.includes("featured") || (pinnedRepoNames.size > 0 ? pinnedRepoNames.has(repo.name) : index < 6),
       };
     }));
 
