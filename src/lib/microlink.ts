@@ -5,7 +5,7 @@ export function getOptimizedScreenshotUrl(repoUrl: string): string {
     screenshot: 'true',
     meta: 'false',
     embed: 'screenshot.url',
-    waitFor: '2500',
+    waitFor: '5000',
     device: 'macbook'
   });
 
