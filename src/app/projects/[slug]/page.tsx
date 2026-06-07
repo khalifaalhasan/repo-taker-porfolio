@@ -42,8 +42,21 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
           <div className="space-y-6">
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight">{project.title}</h1>
             
-            {/* Contributor */}
-            {project.ownerName && (
+            {/* Contributors */}
+            {project.contributors && project.contributors.length > 0 ? (
+              <div className="flex items-center flex-wrap gap-3">
+                <span className="text-sm font-medium text-muted-foreground">Contributors:</span>
+                <div className="flex flex-wrap gap-2">
+                  {project.contributors.map(contributor => (
+                    <a key={contributor.login} href={contributor.html_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:bg-secondary/50 transition-colors bg-secondary/20 border border-border/50 px-3 py-1.5 rounded-full">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={contributor.avatar_url} alt={contributor.login} className="w-5 h-5 rounded-full border border-border/50" />
+                      <span className="text-sm font-medium text-foreground">{contributor.login}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ) : project.ownerName && (
               <div className="flex items-center gap-3">
                 <a href={project.ownerUrl || `https://github.com/${project.ownerName}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
                   {project.ownerAvatarUrl ? (

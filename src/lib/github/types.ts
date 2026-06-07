@@ -18,6 +18,7 @@ export interface Project {
   ownerName?: string;
   ownerAvatarUrl?: string;
   ownerUrl?: string;
+  contributors?: { login: string; avatar_url: string; html_url: string }[];
 }
 
 export interface ContributionDay {

@@ -271,6 +271,29 @@ export async function fetchGithubProject(slug: string): Promise<Project | undefi
     } catch (e) {
       console.warn("Failed to fetch description for", enrichedProject.githubFullName);
     }
+    
+    // Fetch contributors
+    try {
+      const contribRes = await fetch(`https://api.github.com/repos/${enrichedProject.githubFullName}/contributors?per_page=10`, {
+        headers: {
+          Authorization: `Bearer ${GITHUB_PAT}`,
+          Accept: "application/vnd.github.v3+json"
+        },
+        next: { revalidate: 3600 }
+      });
+      if (contribRes.ok) {
+        const contributorsData = await contribRes.json();
+        if (Array.isArray(contributorsData)) {
+          enrichedProject.contributors = contributorsData.map((c: any) => ({
+            login: c.login,
+            avatar_url: c.avatar_url,
+            html_url: c.html_url
+          }));
+        }
+      }
+    } catch (e) {
+      console.warn("Failed to fetch contributors for", enrichedProject.githubFullName);
+    }
   }
 
   return enrichedProject;
