@@ -70,14 +70,14 @@ Visit `http://localhost:3000` and watch the magic happen! ✨
 
 ---
 
-## 🖼️ Customizing Project Thumbnails
+## 📁 The `repofolio` Directory (Custom Assets)
 
-By default, Repofolio generates a beautiful OpenGraph image for your projects based on the repository name.
+Want to add a custom image or a long, detailed explanation for a specific project? **It's insanely easy:**
 
-Want to add a custom image? **It's insanely easy:**
-Simply upload an image named `thumbnail.png` (or `.jpg`, `.svg`, `.webp`, `.ico`) to the **root directory** of your repository on GitHub.
+Simply create a folder named `repofolio` in the **root directory** of your repository on GitHub. Inside this folder, you can add:
 
-Repofolio will dynamically detect the extension, proxy the image securely through the Next.js backend, and display it as your project cover!
+1. **`thumbnail.png`** (or `.jpg`, `.svg`, `.webp`): Repofolio will dynamically detect the image, proxy it securely, and display it as your stunning project cover! *(Note: placing it in the root directory still works for backwards compatibility).*
+2. **`description.md`** (or `description.txt`): Write an extended overview, background story, or architecture explanation. Repofolio will automatically fetch this file and render it beautifully on the Project Details page below the Overview section!
 
 ---
 

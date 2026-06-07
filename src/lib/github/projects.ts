@@ -125,16 +125,31 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
       
       let customThumbnail = null;
       try {
-        const rootContents = await fetch(`https://api.github.com/repos/${repo.owner.login}/${repo.name}/contents`, fetchOptions);
-        if (rootContents.ok) {
-          const files = await rootContents.json();
+        const repofolioContents = await fetch(`https://api.github.com/repos/${repo.owner.login}/${repo.name}/contents/repofolio`, fetchOptions);
+        if (repofolioContents.ok) {
+          const files = await repofolioContents.json();
           if (Array.isArray(files)) {
             const thumbnailFile = files.find((f: any) => 
-              f.type === 'file' && 
-              f.name.toLowerCase().startsWith('thumbnail.')
+              f.type === 'file' && f.name.toLowerCase().startsWith('thumbnail.')
             );
             if (thumbnailFile) {
-              customThumbnail = `/api/github-image?repo=${repo.name}&file=${thumbnailFile.name}`;
+              customThumbnail = `/api/github-image?repo=${repo.name}&file=repofolio/${thumbnailFile.name}&owner=${repo.owner.login}`;
+            }
+          }
+        }
+        
+        // Fallback to root directory if not found in repofolio
+        if (!customThumbnail) {
+          const rootContents = await fetch(`https://api.github.com/repos/${repo.owner.login}/${repo.name}/contents`, fetchOptions);
+          if (rootContents.ok) {
+            const files = await rootContents.json();
+            if (Array.isArray(files)) {
+              const thumbnailFile = files.find((f: any) => 
+                f.type === 'file' && f.name.toLowerCase().startsWith('thumbnail.')
+              );
+              if (thumbnailFile) {
+                customThumbnail = `/api/github-image?repo=${repo.name}&file=${thumbnailFile.name}&owner=${repo.owner.login}`;
+              }
             }
           }
         }
@@ -169,6 +184,9 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
         customDescription: null,
         liveUrl,
         featured: repo.topics?.includes("featured") || (pinnedRepoNames.size > 0 ? pinnedRepoNames.has(repo.name) : index < 6),
+        ownerName: repo.owner.login,
+        ownerAvatarUrl: repo.owner.avatar_url,
+        ownerUrl: repo.owner.html_url,
       };
     }));
 
@@ -225,6 +243,33 @@ export async function fetchGithubProject(slug: string): Promise<Project | undefi
       }
     } catch (e) {
       console.warn("Failed to fetch package.json for", enrichedProject.githubFullName);
+    }
+    
+    // Fetch custom description from repofolio/description.md or .txt
+    try {
+      const descRes = await fetch(`https://api.github.com/repos/${enrichedProject.githubFullName}/contents/repofolio/description.md`, {
+        headers: {
+          Authorization: `Bearer ${GITHUB_PAT}`,
+          Accept: "application/vnd.github.v3.raw"
+        },
+        next: { revalidate: 3600 }
+      });
+      if (descRes.ok) {
+        enrichedProject.customDescription = await descRes.text();
+      } else {
+        const descTxtRes = await fetch(`https://api.github.com/repos/${enrichedProject.githubFullName}/contents/repofolio/description.txt`, {
+          headers: {
+            Authorization: `Bearer ${GITHUB_PAT}`,
+            Accept: "application/vnd.github.v3.raw"
+          },
+          next: { revalidate: 3600 }
+        });
+        if (descTxtRes.ok) {
+          enrichedProject.customDescription = await descTxtRes.text();
+        }
+      }
+    } catch (e) {
+      console.warn("Failed to fetch description for", enrichedProject.githubFullName);
     }
   }
 

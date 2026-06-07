@@ -42,6 +42,23 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
           <div className="space-y-6">
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight">{project.title}</h1>
             
+            {/* Contributor */}
+            {project.ownerName && (
+              <div className="flex items-center gap-3">
+                <a href={project.ownerUrl || `https://github.com/${project.ownerName}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                  {project.ownerAvatarUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={project.ownerAvatarUrl} alt={project.ownerName} className="w-8 h-8 rounded-full border border-border" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
+                      <Github className="w-4 h-4" />
+                    </div>
+                  )}
+                  <span className="text-sm font-medium text-muted-foreground">Maintained by <span className="text-foreground">{project.ownerName}</span></span>
+                </a>
+              </div>
+            )}
+            
             {/* Conditional Links Row */}
             {(project.githubUrl || project.liveUrl || project.isPrivateRepo) && (
               <div className="flex flex-wrap items-center gap-4">
@@ -99,6 +116,13 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
             <section className="space-y-4">
               <h2 className="text-2xl font-bold border-b border-border/50 pb-2">Overview</h2>
               <p className="text-muted-foreground leading-relaxed text-lg">{project.description}</p>
+              {project.customDescription && (
+                <div className="mt-6 p-6 rounded-xl bg-secondary/30 border border-border/50">
+                  <p className="whitespace-pre-wrap text-muted-foreground leading-relaxed text-base">
+                    {project.customDescription}
+                  </p>
+                </div>
+              )}
             </section>
           )}
 

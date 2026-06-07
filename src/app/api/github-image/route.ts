@@ -4,9 +4,11 @@ export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const repo = searchParams.get("repo");
   const file = searchParams.get("file") || "thumbnail.png";
+  const ownerParam = searchParams.get("owner");
   
   const GITHUB_PAT = process.env.GITHUB_PAT;
-  const username = process.env.NEXT_PUBLIC_GITHUB_USERNAME || "github";
+  const defaultUsername = process.env.NEXT_PUBLIC_GITHUB_USERNAME || "github";
+  const username = ownerParam || defaultUsername;
 
   if (!repo || !GITHUB_PAT) {
     return new NextResponse("Missing repo or PAT", { status: 400 });

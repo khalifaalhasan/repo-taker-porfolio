@@ -15,6 +15,9 @@ export interface Project {
   featured: boolean;
   customTitle?: string | null;
   customDescription?: string | null;
+  ownerName?: string;
+  ownerAvatarUrl?: string;
+  ownerUrl?: string;
 }
 
 export interface ContributionDay {
