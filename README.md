@@ -18,6 +18,7 @@
 - **📌 Priority Featured Repos:** Want to highlight a specific repo? Add the `featured` topic to your GitHub repo and it will automatically override your pinned repos!
 - **🍴 Forked Repo Support:** Forked repositories are automatically included if you explicitly add the `portfolio` topic to them.
 - **🔒 Private Repo Support:** Securely fetches and displays private repositories (requires PAT) while gracefully handling their assets and links.
+- **👥 Automated Contributors Display:** Magically fetches all human contributors for each repository and displays their interactive GitHub profiles on the Project Details page (ignoring automated bots like dependabot).
 - **🛠️ Tech Stack Auto-Detection:** Dynamically parses your `package.json` and GitHub topics to display your project's technology stack.
 - **🚀 SEO & Performance:** Built on Next.js App Router with Server-Side Rendering (SSR) and aggressive image optimization caching with dynamic OpenGraph cache busters.
 
@@ -78,6 +79,9 @@ Simply create a folder named `repofolio` in the **root directory** of your repos
 
 1. **`thumbnail.png`** (or `.jpg`, `.svg`, `.webp`): Repofolio will dynamically detect the image, proxy it securely, and display it as your stunning project cover! *(Note: placing it in the root directory still works for backwards compatibility).*
 2. **`description.md`** (or `description.txt`): Write an extended overview, background story, or architecture explanation. Repofolio will automatically fetch this file and render it beautifully on the Project Details page below the Overview section!
+
+> **💡 Pro Tip (Microlink Anti-Bot Workaround):**
+> If your live website is protected by Cloudflare or aggressive Anti-Bot firewalls, the automated Microlink screenshot API might fail to capture it. In this case, simply take a manual screenshot and upload it as `repofolio/thumbnail.png`. This custom thumbnail will always take priority and override the automated screenshot!
 
 ---
 
