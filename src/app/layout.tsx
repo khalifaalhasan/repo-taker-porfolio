@@ -21,6 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const name = profileData?.name || username;
   
   return {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'),
     title: {
       default: `${name} | Developer Portfolio`,
       template: `%s | ${name}`,

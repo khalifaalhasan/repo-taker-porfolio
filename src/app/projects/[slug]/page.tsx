@@ -42,6 +42,36 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
           <div className="space-y-6">
             <h1 className="text-4xl md:text-5xl font-bold tracking-tight">{project.title}</h1>
             
+            {/* Contributors */}
+            {project.contributors && project.contributors.length > 0 ? (
+              <div className="flex items-center flex-wrap gap-3">
+                <span className="text-sm font-medium text-muted-foreground">Contributors:</span>
+                <div className="flex flex-wrap gap-2">
+                  {project.contributors.map(contributor => (
+                    <a key={contributor.login} href={contributor.html_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:bg-secondary/50 transition-colors bg-secondary/20 border border-border/50 px-3 py-1.5 rounded-full">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={contributor.avatar_url} alt={contributor.login} className="w-5 h-5 rounded-full border border-border/50" />
+                      <span className="text-sm font-medium text-foreground">{contributor.login}</span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ) : project.ownerName && (
+              <div className="flex items-center gap-3">
+                <a href={project.ownerUrl || `https://github.com/${project.ownerName}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                  {project.ownerAvatarUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={project.ownerAvatarUrl} alt={project.ownerName} className="w-8 h-8 rounded-full border border-border" />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
+                      <Github className="w-4 h-4" />
+                    </div>
+                  )}
+                  <span className="text-sm font-medium text-muted-foreground">Maintained by <span className="text-foreground">{project.ownerName}</span></span>
+                </a>
+              </div>
+            )}
+            
             {/* Conditional Links Row */}
             {(project.githubUrl || project.liveUrl || project.isPrivateRepo) && (
               <div className="flex flex-wrap items-center gap-4">
@@ -78,13 +108,13 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
               />
               
               {/* Additional Images Grid */}
-              {project.images.length > 1 && (
-                <div className={`grid gap-4 ${project.images.length === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-2 md:grid-cols-2'}`}>
-                  {project.images.slice(1).map((img, idx) => (
+              {project.images.length > 2 && (
+                <div className={`grid gap-4 ${project.images.length === 3 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-2 md:grid-cols-2'}`}>
+                  {project.images.slice(2).map((img, idx) => (
                     <ProjectImage 
                       key={idx}
                       src={img} 
-                      alt={`${project.title} screenshot ${idx + 1}`} 
+                      alt={`${project.title} screenshot ${idx + 2}`} 
                       containerClassName="rounded-xl border border-border/50 shadow-sm"
                       imageClassName="hover:scale-105"
                     />
@@ -99,6 +129,13 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
             <section className="space-y-4">
               <h2 className="text-2xl font-bold border-b border-border/50 pb-2">Overview</h2>
               <p className="text-muted-foreground leading-relaxed text-lg">{project.description}</p>
+              {project.customDescription && (
+                <div className="mt-6 p-6 rounded-xl bg-secondary/30 border border-border/50">
+                  <p className="whitespace-pre-wrap text-muted-foreground leading-relaxed text-base">
+                    {project.customDescription}
+                  </p>
+                </div>
+              )}
             </section>
           )}
 

@@ -106,10 +106,14 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
 
     const originalRepos = uniqueRepos.filter((repo: any) => 
       pinnedRepoNames.has(repo.name) || 
-      (!repo.fork && repo.topics && (repo.topics.includes("portfolio") || repo.topics.includes("portofolio")))
+      (repo.topics && (repo.topics.includes("portfolio") || repo.topics.includes("portofolio") || repo.topics.includes("featured")))
     );
 
     originalRepos.sort((a: any, b: any) => {
+      const aFeatured = a.topics?.includes("featured") ? 1 : 0;
+      const bFeatured = b.topics?.includes("featured") ? 1 : 0;
+      if (aFeatured !== bFeatured) return bFeatured - aFeatured;
+
       const aPinned = pinnedRepoNames.has(a.name) ? 1 : 0;
       const bPinned = pinnedRepoNames.has(b.name) ? 1 : 0;
       return bPinned - aPinned;
@@ -121,22 +125,38 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
       
       let customThumbnail = null;
       try {
-        const rootContents = await fetch(`https://api.github.com/repos/${repo.owner.login}/${repo.name}/contents`, fetchOptions);
-        if (rootContents.ok) {
-          const files = await rootContents.json();
+        const repofolioContents = await fetch(`https://api.github.com/repos/${repo.owner.login}/${repo.name}/contents/repofolio`, fetchOptions);
+        if (repofolioContents.ok) {
+          const files = await repofolioContents.json();
           if (Array.isArray(files)) {
             const thumbnailFile = files.find((f: any) => 
-              f.type === 'file' && 
-              f.name.toLowerCase().startsWith('thumbnail.')
+              f.type === 'file' && f.name.toLowerCase().startsWith('thumbnail.')
             );
             if (thumbnailFile) {
-              customThumbnail = `/api/github-image?repo=${repo.name}&file=${thumbnailFile.name}`;
+              customThumbnail = `/api/github-image?repo=${repo.name}&file=repofolio/${thumbnailFile.name}&owner=${repo.owner.login}`;
+            }
+          }
+        }
+        
+        // Fallback to root directory if not found in repofolio
+        if (!customThumbnail) {
+          const rootContents = await fetch(`https://api.github.com/repos/${repo.owner.login}/${repo.name}/contents`, fetchOptions);
+          if (rootContents.ok) {
+            const files = await rootContents.json();
+            if (Array.isArray(files)) {
+              const thumbnailFile = files.find((f: any) => 
+                f.type === 'file' && f.name.toLowerCase().startsWith('thumbnail.')
+              );
+              if (thumbnailFile) {
+                customThumbnail = `/api/github-image?repo=${repo.name}&file=${thumbnailFile.name}&owner=${repo.owner.login}`;
+              }
             }
           }
         }
       } catch (e) {}
       
-      const ogImage = `https://opengraph.githubassets.com/1/${repo.owner.login}/${repo.name}`;
+      const cacheBuster = repo.updated_at ? new Date(repo.updated_at).getTime() : Math.random().toString(36).substring(7);
+      const ogImage = `https://opengraph.githubassets.com/${cacheBuster}/${repo.owner.login}/${repo.name}`;
       let primaryImage = ogImage;
       
       if (customThumbnail) {
@@ -155,7 +175,7 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
         description: repo.description || "No description provided.",
         challengeDescription: null,
         features: null,
-        techStack: repo.topics && repo.topics.length > 0 ? repo.topics.filter((t: string) => t !== 'portfolio' && t !== 'portofolio') : [repo.language].filter(Boolean),
+        techStack: repo.topics && repo.topics.length > 0 ? repo.topics.filter((t: string) => t !== 'portfolio' && t !== 'portofolio' && t !== 'featured') : [repo.language].filter(Boolean),
         githubUrl: repo.private ? null : repo.html_url,
         githubFullName: repo.full_name,
         isPrivateRepo: repo.private,
@@ -163,7 +183,10 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
         customTitle: null,
         customDescription: null,
         liveUrl,
-        featured: pinnedRepoNames.size > 0 ? pinnedRepoNames.has(repo.name) : index < 6,
+        featured: repo.topics?.includes("featured") || (pinnedRepoNames.size > 0 ? pinnedRepoNames.has(repo.name) : index < 6),
+        ownerName: repo.owner.login,
+        ownerAvatarUrl: repo.owner.avatar_url,
+        ownerUrl: repo.owner.html_url,
       };
     }));
 
@@ -175,7 +198,8 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
 }
 
 export async function fetchGithubProject(slug: string): Promise<Project | undefined> {
-  const allProjects = await fetchGithubProjects();
+  const username = process.env.NEXT_PUBLIC_GITHUB_USERNAME || "github";
+  const allProjects = await fetchGithubProjects(username);
   const project = allProjects.find(p => p.slug === slug);
   if (!project) return undefined;
 
@@ -220,6 +244,58 @@ export async function fetchGithubProject(slug: string): Promise<Project | undefi
       }
     } catch (e) {
       console.warn("Failed to fetch package.json for", enrichedProject.githubFullName);
+    }
+    
+    // Fetch custom description from repofolio/description.md or .txt
+    try {
+      const descRes = await fetch(`https://api.github.com/repos/${enrichedProject.githubFullName}/contents/repofolio/description.md`, {
+        headers: {
+          Authorization: `Bearer ${GITHUB_PAT}`,
+          Accept: "application/vnd.github.v3.raw"
+        },
+        next: { revalidate: 3600 }
+      });
+      if (descRes.ok) {
+        enrichedProject.customDescription = await descRes.text();
+      } else {
+        const descTxtRes = await fetch(`https://api.github.com/repos/${enrichedProject.githubFullName}/contents/repofolio/description.txt`, {
+          headers: {
+            Authorization: `Bearer ${GITHUB_PAT}`,
+            Accept: "application/vnd.github.v3.raw"
+          },
+          next: { revalidate: 3600 }
+        });
+        if (descTxtRes.ok) {
+          enrichedProject.customDescription = await descTxtRes.text();
+        }
+      }
+    } catch (e) {
+      console.warn("Failed to fetch description for", enrichedProject.githubFullName);
+    }
+    
+    // Fetch contributors
+    try {
+      const contribRes = await fetch(`https://api.github.com/repos/${enrichedProject.githubFullName}/contributors?per_page=10`, {
+        headers: {
+          Authorization: `Bearer ${GITHUB_PAT}`,
+          Accept: "application/vnd.github.v3+json"
+        },
+        next: { revalidate: 3600 }
+      });
+      if (contribRes.ok) {
+        const contributorsData = await contribRes.json();
+        if (Array.isArray(contributorsData)) {
+          enrichedProject.contributors = contributorsData
+            .filter((c: any) => c.type !== 'Bot' && !c.login.toLowerCase().includes('[bot]'))
+            .map((c: any) => ({
+              login: c.login,
+              avatar_url: c.avatar_url,
+              html_url: c.html_url
+            }));
+        }
+      }
+    } catch (e) {
+      console.warn("Failed to fetch contributors for", enrichedProject.githubFullName);
     }
   }
 

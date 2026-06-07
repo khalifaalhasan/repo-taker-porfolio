@@ -11,10 +11,16 @@
 
 - **🚫 Zero Database:** No Supabase, Firebase, or PostgreSQL needed. Your GitHub account *is* the database.
 - **⚡ Fully Automated:** Automatically fetches your GitHub Bio, Company, Avatar, and Pinned Repositories.
-- **🎨 Glassmorphism UI:** Stunning, modern, and highly professional design built with Tailwind CSS and Framer Motion.
+- **🎨 Glassmorphism UI & Themes:** Stunning, modern design with multiple built-in themes (Default, Twitter, Candyland, Claymorphism, Modern Minimal, Vercel, Cyberpunk).
 - **🪄 CLI Scaffolding:** Generate your entire portfolio codebase in 5 seconds using our interactive CLI.
 - **🖼️ Smart Thumbnails:** Just drop a `thumbnail.png` in any of your GitHub repositories, and Repofolio will automatically use it as the project cover.
-- **🚀 SEO & Performance:** Built on Next.js App Router with Server-Side Rendering (SSR) and aggressive image optimization caching.
+- **🌍 Live Website Previews:** Automatically generates live screenshots of your projects via Microlink API if a `homepage` URL is set.
+- **📌 Priority Featured Repos:** Want to highlight a specific repo? Add the `featured` topic to your GitHub repo and it will automatically override your pinned repos!
+- **🍴 Forked Repo Support:** Forked repositories are automatically included if you explicitly add the `portfolio` topic to them.
+- **🔒 Private Repo Support:** Securely fetches and displays private repositories (requires PAT) while gracefully handling their assets and links.
+- **👥 Automated Contributors Display:** Magically fetches all human contributors for each repository and displays their interactive GitHub profiles on the Project Details page (ignoring automated bots like dependabot).
+- **🛠️ Tech Stack Auto-Detection:** Dynamically parses your `package.json` and GitHub topics to display your project's technology stack.
+- **🚀 SEO & Performance:** Built on Next.js App Router with Server-Side Rendering (SSR) and aggressive image optimization caching with dynamic OpenGraph cache busters.
 
 ---
 
@@ -65,14 +71,17 @@ Visit `http://localhost:3000` and watch the magic happen! ✨
 
 ---
 
-## 🖼️ Customizing Project Thumbnails
+## 📁 The `repofolio` Directory (Custom Assets)
 
-By default, Repofolio generates a beautiful OpenGraph image for your projects based on the repository name.
+Want to add a custom image or a long, detailed explanation for a specific project? **It's insanely easy:**
 
-Want to add a custom image? **It's insanely easy:**
-Simply upload an image named `thumbnail.png` (or `.jpg`, `.svg`, `.webp`, `.ico`) to the **root directory** of your repository on GitHub.
+Simply create a folder named `repofolio` in the **root directory** of your repository on GitHub. Inside this folder, you can add:
 
-Repofolio will dynamically detect the extension, proxy the image securely through the Next.js backend, and display it as your project cover!
+1. **`thumbnail.png`** (or `.jpg`, `.svg`, `.webp`): Repofolio will dynamically detect the image, proxy it securely, and display it as your stunning project cover! *(Note: placing it in the root directory still works for backwards compatibility).*
+2. **`description.md`** (or `description.txt`): Write an extended overview, background story, or architecture explanation. Repofolio will automatically fetch this file and render it beautifully on the Project Details page below the Overview section!
+
+> **💡 Pro Tip (Microlink Anti-Bot Workaround):**
+> If your live website is protected by Cloudflare or aggressive Anti-Bot firewalls, the automated Microlink screenshot API might fail to capture it. In this case, simply take a manual screenshot and upload it as `repofolio/thumbnail.png`. This custom thumbnail will always take priority and override the automated screenshot!
 
 ---
 
@@ -84,6 +93,12 @@ Repofolio is optimized for Vercel.
 2. Import the repository in [Vercel](https://vercel.com).
 3. **Important:** Add `NEXT_PUBLIC_GITHUB_USERNAME` and `GITHUB_PAT` to your Vercel Environment Variables before deploying!
 4. Click Deploy.
+
+---
+
+## 🛠️ CLI Development
+
+If you want to modify the CLI or test it locally without publishing to NPM, please refer to the **[CLI Development Guide](cli/README.md)**.
 
 ---
 
