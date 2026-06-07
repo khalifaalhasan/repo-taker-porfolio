@@ -106,7 +106,7 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
 
     const originalRepos = uniqueRepos.filter((repo: any) => 
       pinnedRepoNames.has(repo.name) || 
-      (repo.topics && (repo.topics.includes("portfolio") || repo.topics.includes("portofolio")))
+      (repo.topics && (repo.topics.includes("portfolio") || repo.topics.includes("portofolio") || repo.topics.includes("featured")))
     );
 
     originalRepos.sort((a: any, b: any) => {
