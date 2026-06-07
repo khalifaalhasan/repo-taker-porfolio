@@ -78,13 +78,13 @@ export default async function ProjectDetail({ params }: { params: Promise<{ slug
               />
               
               {/* Additional Images Grid */}
-              {project.images.length > 1 && (
-                <div className={`grid gap-4 ${project.images.length === 2 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-2 md:grid-cols-2'}`}>
-                  {project.images.slice(1).map((img, idx) => (
+              {project.images.length > 2 && (
+                <div className={`grid gap-4 ${project.images.length === 3 ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-2 md:grid-cols-2'}`}>
+                  {project.images.slice(2).map((img, idx) => (
                     <ProjectImage 
                       key={idx}
                       src={img} 
-                      alt={`${project.title} screenshot ${idx + 1}`} 
+                      alt={`${project.title} screenshot ${idx + 2}`} 
                       containerClassName="rounded-xl border border-border/50 shadow-sm"
                       imageClassName="hover:scale-105"
                     />
