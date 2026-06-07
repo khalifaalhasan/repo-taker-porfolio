@@ -198,7 +198,8 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
 }
 
 export async function fetchGithubProject(slug: string): Promise<Project | undefined> {
-  const allProjects = await fetchGithubProjects();
+  const username = process.env.NEXT_PUBLIC_GITHUB_USERNAME || "github";
+  const allProjects = await fetchGithubProjects(username);
   const project = allProjects.find(p => p.slug === slug);
   if (!project) return undefined;
 
