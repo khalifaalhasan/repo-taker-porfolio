@@ -1,5 +1,5 @@
 {
-  "name": "create-repofolio",
+  "name": "@khalifaalhasan/create-repofolio",
   "version": "1.0.0",
   "description": "CLI scaffolding tool for Repofolio Generator",
   "main": "dist/index.js",
