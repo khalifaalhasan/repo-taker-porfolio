@@ -136,7 +136,8 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
         }
       } catch (e) {}
       
-      const ogImage = `https://opengraph.githubassets.com/1/${repo.owner.login}/${repo.name}`;
+      const cacheBuster = repo.updated_at ? new Date(repo.updated_at).getTime() : Math.random().toString(36).substring(7);
+      const ogImage = `https://opengraph.githubassets.com/${cacheBuster}/${repo.owner.login}/${repo.name}`;
       let primaryImage = ogImage;
       
       if (customThumbnail) {

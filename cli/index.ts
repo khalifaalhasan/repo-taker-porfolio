@@ -25,7 +25,7 @@ async function main() {
       githubUsername: () =>
         p.text({
           message: "What is your GitHub Username?",
-          placeholder: "khalifaalhasan",
+          placeholder: "my-github-username",
           validate: (value) => {
             if (!value) return "Username is required!";
           },
