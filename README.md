@@ -87,6 +87,12 @@ Repofolio is optimized for Vercel.
 
 ---
 
+## 🛠️ CLI Development
+
+If you want to modify the CLI or test it locally without publishing to NPM, please refer to the **[CLI Development Guide](cli/README.md)**.
+
+---
+
 <div align="center">
   <p>Built with ❤️ by Developers, for Developers.</p>
 </div>
