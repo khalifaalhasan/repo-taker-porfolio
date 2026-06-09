@@ -5,17 +5,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 
-export default async function ProjectsPage({ searchParams }: { searchParams: Promise<{ page?: string }> }) {
-  const params = await searchParams;
-  const page = parseInt(params.page || "1", 10);
-  const limit = 12;
-  
-  const allProjects = await fetchGithubProjects();
+export default async function ProjectsPage() {
+  const username = process.env.NEXT_PUBLIC_GITHUB_USERNAME || "github";
+  const allProjects = await fetchGithubProjects(username);
   const visibleProjects = allProjects.filter(p => !p.isHidden);
   
-  const totalProjects = visibleProjects.length;
-  const totalPages = Math.ceil(totalProjects / limit);
-  const currentProjects = visibleProjects.slice((page - 1) * limit, page * limit);
+  const currentProjects = visibleProjects;
   
   return (
     <main className="min-h-screen bg-background pt-24 pb-12">
@@ -65,29 +60,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
           ))}
         </div>
 
-        {totalPages > 1 && (
-          <div className="flex items-center justify-center mt-16 gap-4">
-            {page > 1 ? (
-              <Link href={`/projects?page=${page - 1}`}>
-                <Button variant="outline">Previous</Button>
-              </Link>
-            ) : (
-              <Button variant="outline" disabled>Previous</Button>
-            )}
-            
-            <span className="text-sm font-medium text-muted-foreground">
-              Page {page} of {totalPages}
-            </span>
-            
-            {page < totalPages ? (
-              <Link href={`/projects?page=${page + 1}`}>
-                <Button variant="outline">Next</Button>
-              </Link>
-            ) : (
-              <Button variant="outline" disabled>Next</Button>
-            )}
-          </div>
-        )}
+
       </div>
     </main>
   );

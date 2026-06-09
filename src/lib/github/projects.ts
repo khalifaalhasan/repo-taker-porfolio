@@ -12,9 +12,12 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
     const fetchOptions = getFetchOptions();
 
     // 1. Ambil repo personal yang murni dimiliki oleh user (type=owner)
-    const userReposUrl = username 
-      ? `https://api.github.com/users/${username}/repos?type=owner&per_page=100&sort=pushed`
-      : `https://api.github.com/user/repos?type=owner&per_page=100&sort=pushed`;
+    let userReposUrl = `https://api.github.com/users/${username || 'github'}/repos?type=owner&per_page=100&sort=pushed`;
+    
+    // Gunakan endpoint /user/repos jika menggunakan PAT agar private repo ikut terambil
+    if (GITHUB_PAT && (!username || username === process.env.NEXT_PUBLIC_GITHUB_USERNAME)) {
+      userReposUrl = `https://api.github.com/user/repos?type=owner&per_page=100&sort=pushed`;
+    }
     
     const userReposPromise = fetch(userReposUrl, fetchOptions);
 
@@ -133,7 +136,7 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
               f.type === 'file' && f.name.toLowerCase().startsWith('thumbnail.')
             );
             if (thumbnailFile) {
-              customThumbnail = `/api/github-image?repo=${repo.name}&file=repofolio/${thumbnailFile.name}&owner=${repo.owner.login}`;
+              customThumbnail = thumbnailFile.download_url;
             }
           }
         }
@@ -148,7 +151,7 @@ export async function fetchGithubProjects(username?: string): Promise<Project[]>
                 f.type === 'file' && f.name.toLowerCase().startsWith('thumbnail.')
               );
               if (thumbnailFile) {
-                customThumbnail = `/api/github-image?repo=${repo.name}&file=${thumbnailFile.name}&owner=${repo.owner.login}`;
+                customThumbnail = thumbnailFile.download_url;
               }
             }
           }

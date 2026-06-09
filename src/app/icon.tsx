@@ -3,6 +3,7 @@ import { fetchProfileData } from '@/lib/github';
 
 export const size = { width: 256, height: 256 };
 export const contentType = 'image/png';
+export const dynamic = 'force-static';
 
 export default async function Icon() {
   const profileData = await fetchProfileData();

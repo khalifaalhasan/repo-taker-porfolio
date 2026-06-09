@@ -1,10 +1,19 @@
-import { fetchGithubProject } from "@/lib/github";
+import { fetchGithubProject, fetchGithubProjects } from "@/lib/github";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ProjectImage } from "@/components/web/shared/ProjectImage";
 import { ArrowLeft, ExternalLink, Github, CheckCircle2, Lock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Metadata } from "next";
+
+export async function generateStaticParams() {
+  const username = process.env.NEXT_PUBLIC_GITHUB_USERNAME || "github";
+  const projects = await fetchGithubProjects(username);
+  
+  return projects.map((project) => ({
+    slug: project.slug,
+  }));
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
